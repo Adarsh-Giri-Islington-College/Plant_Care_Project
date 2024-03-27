@@ -1,0 +1,17 @@
+{
+    "0": ["Corn_Blight"],
+    "1": ["Corn_Common_Rust"],
+    "2": ["Corn_Healthy"],
+    "3": ["Mango_Anthracnose"],
+    "4": ["Mango_Healthy"],
+    "5": ["Potato_Early_Blight"],
+    "6": ["Potato_Healthy"],
+    "7": ["Potato_Late_Blight"],
+    "8": ["Tomato_Early_blight"],
+    "9": ["Tomato_healthy"],
+    "10": ["Tomato_Late_blight"],
+    "11": ["Tomato_Target_Spot"],
+    "12": ["Wheat_Brown_Rust"],
+    "13": ["Wheat_Healthy"],
+    "14": ["Wheat_Yellow_Rust"]
+}

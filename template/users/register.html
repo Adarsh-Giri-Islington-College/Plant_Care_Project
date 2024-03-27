@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <h2>Register Here</h2>
+    
+    <div class="row justify-content-center">         
+        <div class="card-body">
+                    
+            <form method="POST" enctype="multipart/form-data">
+
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <input type="text" name="first_name" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" name="last_name" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" name="address" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password2">Confirm Password</label>
+                    <input type="password" name="password2" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="user_image">User Image</label>
+                    <input type="file" name="user_image" class="form-control">
+                </div>
+
+                <br>
+                <input type="submit" value="Register" class="btn btn-primary btn-sm m-1">
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

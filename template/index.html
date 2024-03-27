@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <style>
+        img {
+            width: 256px; 
+            height: 256px; 
+            object-fit: cover; 
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2 class="text-center">Plant Disease Prediction</h2><hr>
+    
+        <div class="row justify-content-center"> 
+    
+            <form method="post" enctype="multipart/form-data" action="predictImage">
+                {% csrf_token %}
+                <div><label>Upload Image File Here:</label></div> 
+                
+                <img id="uploadedImage" src="{% if filePathName %}{{ filePathName }}{% else %} ./static\images\placeholder\placeholder_img.png {% endif %}" alt="image" ><br>
+                <h2>Result: {{predictedLabel}}</h2>
+                <h5><label><strong> Confidence: </strong></label>  {{  confidence  }}<br><br></h5>
+                
+                <input name="filePath" type="file" onchange="previewImage(event)"><br><br>
+                <input type="submit" value="Submit" class="btn btn-primary btn-sm m-1">
+            </form>
+
+        </div>
+
+        {% if recommended_products %}
+        <div class="row justify-content-among m-4">
+            <h2>Recommended Products</h2>
+            <div class="row">
+                {% for product in recommended_products %}
+                <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4">
+
+                    <div class="card p-2"  style="height: 50vh;">
+                        <a href="{% url 'product_detail' product.pk %}">
+                            <div class="image-container" style="height: 100px; overflow: hidden;">
+                                <img src="{{ product.product_image.url }}" class="card-img-top" alt="image" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                        </a>
+                        <div class="card-body">
+                            <p class="card-title"><strong>{{ product.product_name }} </strong></p>
+                            <p class="card-text">{{ product.product_description|slice:":25" }}{% if product.product_description|length > 25 %}...{% endif %}</p>
+                        </div>
+    
+                        <div>
+                            <hr>
+                            <p style="margin-bottom: 10px; margin-left: 20px;"> <strong>Rs.</strong> {{ product.product_price }}</p>
+                        </div>
+    
+                        <div class="d-flex flex-row justify-content-center mb-3">
+                            <div>
+                                <a href="{% url 'product_detail' product.pk %}" class="btn btn-primary btn-sm "><i class="fas fa-info-circle"></i></a>
+                                <a href="{% url 'add_to_cart' product_id=product.pk %}" class="btn btn-primary btn-sm"><i class="fas fa-cart-plus"></i></a>
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+
+    <script>
+        function previewImage(event) {
+            var input = event.target;
+            var reader = new FileReader();
+            reader.onload = function(){
+                var dataURL = reader.result;
+                var img = document.getElementById('uploadedImage');
+                img.src = dataURL;
+                img.style.display = 'block'; 
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    </script>
+    
+</body>
+</html>
+
+{% endblock %}

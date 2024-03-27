@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+  
+<h1 style="font-size: 40px; margin-left: 30px;" class="p-2">
+    Add Product
+</h1>
+
+<div class="container m-3">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.product_image.id_for_label }}">Product Image</label>
+            {{ form.product_image }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.product_name.id_for_label }}">Product Name</label>
+            {{ form.product_name }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.product_price.id_for_label }}">Product Price</label>
+            {{ form.product_price }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.product_quantity.id_for_label }}">Product Quantity</label>
+            {{ form.product_quantity }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.product_description.id_for_label }}">Product Description</label>
+            {{ form.product_description }}
+        </div>
+        <div class="form-group">
+            <label>Product For</label><br>
+            {% for checkbox in form.product_for %}
+                <div class="form-check form-check-inline">
+                    {{ checkbox }}
+                </div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>    
+        
+
+</div>
+
+{% endblock %}
