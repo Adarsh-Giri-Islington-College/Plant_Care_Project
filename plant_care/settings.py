@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'home_prediction',
     'products',
     'users',
-    'cart'
+    'cart',
+    'order'
 ]
 
 MIDDLEWARE = [

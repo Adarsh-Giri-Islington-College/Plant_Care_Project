@@ -1,0 +1,39 @@
+<!-- admin_view_orders.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+  {% if orders_with_details %}
+    <h1>All Orders with Usernames and Product Details</h1>
+    <ul class="list-group">
+      {% for order in orders_with_details %}
+        <li class="list-group-item">
+          <h4>Order ID: {{ order.pk }}</h4>
+          <p><strong>Order Date:</strong> {{ order.order_date }}</p>
+          <p><strong>User:</strong> {{ order.user.username }}</p>
+          <p><strong>Email:</strong> {{ order.user.email }}</p>
+          <p><strong>Total Price:</strong> ${{ order.total_price }}</p>
+          <div class="row">
+            {% for order_item in order.orderitem_set.all %}
+              <div class="col-md-4">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Product Name: {{ order_item.product.product_name }}</h5>
+                    <p class="card-text"><strong>Quantity:</strong> {{ order_item.quantity }}</p>
+                    <p class="card-text"><strong>Subtotal:</strong> ${{ order_item.sub_total }}</p>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No orders found.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

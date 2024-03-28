@@ -40,21 +40,3 @@ def remove_from_cart(request, cart_item_id):
     cart_item = get_object_or_404(CartItem, pk=cart_item_id)
     cart_item.delete()
     return redirect('view_cart')
-
-
-"""
-def add_to_cart(request, product_id):
-    product = get_object_or_404(Product, pk=product_id)
-    user_cart, _ = Cart.objects.get_or_create(user=request.user)
-
-    # Decrement the product quantity
-    product.product_quantity -= 1
-    product.save()
-
-    # Add the product to the cart
-    cart_item, _ = CartItem.objects.get_or_create(cart=user_cart, product=product)
-    cart_item.quantity += 1
-    cart_item.save()
-
-    return redirect('display_products')
-""" 
