@@ -9,7 +9,8 @@
       {% for order in user_orders %}
         <li class="list-group-item">
           <h4>Order Date: {{ order.order_date }}</h4>
-          <p><strong>Total Price:</strong> ${{ order.total_price }}</p>
+          <p><strong>Total Price:</strong> Rs. {{ order.total_price }}</p>
+          <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
           <div class="row">
             {% for item in order.orderitem_set.all %}
               <div class="col-md-4">
@@ -17,7 +18,7 @@
                   <div class="card-body">
                     <h5 class="card-title">Product Name: {{ item.product.product_name }}</h5>
                     <p class="card-text"><strong>Quantity:</strong> {{ item.quantity }}</p>
-                    <p class="card-text"><strong>Subtotal:</strong> ${{ item.sub_total }}</p>
+                    <p class="card-text"><strong>Subtotal:</strong> Rs. {{ item.sub_total }}</p>
                   </div>
                 </div>
               </div>

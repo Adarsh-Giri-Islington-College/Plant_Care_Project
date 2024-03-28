@@ -73,15 +73,16 @@ def verify_payment(request):
     user = request.user
     user_cart = Cart.objects.get(user=user)
     cart_items = user_cart.cartitem_set.all()
-    total_price = sum(item.sub_total() for item in cart_items)
+    total_price = sum(item.sub_total() for item in cart_items) 
+    shipping_address = user.address 
 
-    order = Order.objects.create(user=user, total_price=total_price)
+    order = Order.objects.create(user=user, total_price=total_price, shipping_address=shipping_address)
 
     for cart_item in cart_items:
         OrderItem.objects.create(order=order, product=cart_item.product, quantity=cart_item.quantity)
 
     empty_cart_and_deduct_quantity(request.user)
-
+    
     return render(request, 'order/verify_payment.html')
 
 
