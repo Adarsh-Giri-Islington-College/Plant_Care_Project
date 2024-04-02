@@ -13,9 +13,33 @@
                         <p style="font-size: 15px;" class="card-text mt-1">Description: {{ eachProduct.product_description }}</p>
                         <p style="font-size: 13px;" class="cart-text mt-1">added - {{ eachProduct.added_at }}</p>
 
+                        
+                        {% if ordered %}
+                            <form method="post" action="{% url 'product_detail' eachProduct.pk %}">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <button type="submit" class="btn btn-primary">Submit Review</button>
+                            </form>
+                        {% endif %}
+
+
+                        <p>{{overall_rating}}</p>
+   
+
+                        <h3>Reviews</h3>
+                        <ul>
+                            {% for review in eachProduct.review_set.all %}
+                                <li>
+                                    <strong>Username:</strong> {{ review.user.username }}
+                                </li>
+                                <li><strong>Comment:</strong> {{ review.comment }}</li>
+                                <li><strong>Rating:</strong> {{ review.rating }}</li>
+                                <br>
+                            {% endfor %}
+                        </ul>
+
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

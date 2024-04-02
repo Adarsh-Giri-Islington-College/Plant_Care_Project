@@ -20,6 +20,9 @@
                         <label for="password">Password</label>
                         <input type="password" name="password" class="form-control" required placeholder="Enter your password">
                     </div>
+                    {% if error_message %}
+                    <p class="text-danger">{{ error_message }}</p> 
+                    {% endif %}
 
                     <br>
                     <input type="submit" value="Login" class="btn btn-primary">

@@ -10,11 +10,13 @@
     <title>Error</title>
 </head>
 <body>
+    {% if user.is_ban %}
     <div class="container">
         <h1>Error</h1>
         <p>{{ error_message }}</p>
         <p>Banned until: {{ ban_until }}</p>
     </div>
+    {% elif %}
 </body>
 </html>
 

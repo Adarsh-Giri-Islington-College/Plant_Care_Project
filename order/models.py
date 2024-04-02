@@ -4,9 +4,24 @@ from django.utils import timezone
 from products.models import Product
 
 
+class Payment(models.Model):
+    PAYMENT_METHOD_CHOICES = [
+        ('Khalti', 'Khalti'),
+        ('Cash on Delivery', 'Cash on Delivery'),
+    ]
+
+    payment_id = models.BigAutoField(primary_key=True)
+    payment_method = models.CharField(max_length=50, choices=PAYMENT_METHOD_CHOICES)
+    payment_status = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f"Payment {self.payment_id}"
+    
+
 class Order(models.Model):
     order_id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    payment = models.ForeignKey(Payment, on_delete=models.CASCADE)
     order_date = models.DateTimeField(default=timezone.now)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     shipping_address = models.CharField(max_length=50)

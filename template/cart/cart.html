@@ -35,7 +35,7 @@
             </table>
         </div>
         <p>Total Price: Rs. {{ total_price }}</p>
-        <a href="{% url 'khalti_payment' %}" class="btn btn-primary">Proceed to Checkout</a>
+        <a href="{% url 'payment' %}" class="btn btn-primary">Proceed to Checkout</a>
     {% else %}
         <p>Your cart is empty.</p>
     {% endif %}

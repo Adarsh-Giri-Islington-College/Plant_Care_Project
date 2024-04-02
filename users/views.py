@@ -3,6 +3,8 @@ from .models import User, edit_profile_form
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils import timezone
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 def is_admin(user):
@@ -27,17 +29,28 @@ def register(request):
         if password1 == password2:
             if User.objects.filter(username=username).exists():
                 print('Username exists! Please try another username')
-                return redirect('register')
+                username_error_message = 'Username exists! Please try another username'
+                context = {
+                    'username_error_message': username_error_message
+                }
+                return render(request, 'users/register.html', context)
             elif User.objects.filter(email=email).exists():
                 print('Email exists! Please try another email')
-                return redirect('register')
+                email_error_message = 'Email exists! Please try another email'
+                context = {
+                    'email_error_message': email_error_message
+                }                
+                return render(request, 'users/register.html', context)
             else:
                 user = User.objects.create_user(user_image=user_image, username=username, email=email, first_name=first_name, last_name=last_name, address=address, password=password1)
                 user.save()
                 return redirect('login')
         else:
-            print('Passwords did not match!')
-            return redirect('register')
+            error_message = 'Passwords did not match!'
+            context = {
+                'error_message': error_message
+            }
+            return render(request, 'users/register.html', context)
     else:
         return render(request, 'users/register.html')
 
@@ -55,10 +68,17 @@ def login(request):
             return redirect('display_products')
         elif user is not None and user.is_banned:
             ban_until = user.ban_until.strftime("%Y-%m-%d %H:%M:%S") if user.ban_until else None
-            return render(request, 'error.html', {'error_message': 'You are banned.', 'ban_until': ban_until})
+            error_message = 'Sorry you have been banned until ' + ban_until + '.'
+            context = {
+                'error_message': error_message
+            } 
+            return render(request, 'users/login.html', context)
         else:
-            print('Invalid credentials')
-            return render(request, 'users/login.html', {'error_message': 'Invalid credentials'})
+            error_message = 'User not Found!'
+            context = {
+                'error_message': error_message
+            }            
+            return render(request, 'users/login.html', context)
     else:
         return render(request, 'users/login.html') 
 

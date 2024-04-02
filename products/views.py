@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from . models import Product
-from . models import product_form
+from . models import Product, product_form, Review, ReviewForm
 from users.models import User
+from django.db.models import Avg
 
 
 def is_admin(user):
@@ -32,7 +32,34 @@ def display_products(request):
 def product_detail(request, pk):
     eachProduct = Product.objects.get(product_id=pk)
 
-    context = {'eachProduct': eachProduct}
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            user = request.user  
+            comment = form.cleaned_data['comment']
+            rating = form.cleaned_data['rating']
+            review = Review.objects.create(user=user, product=eachProduct, comment=comment, rating=rating)
+            return redirect('product_detail', pk=pk) 
+    else:
+        form = ReviewForm()
+    
+    ordered = False
+    if request.user.is_authenticated:
+        ordered = request.user.order_set.filter(products=eachProduct, payment__payment_status='done').exists()
+
+    reviews = Review.objects.filter(product=eachProduct)
+    if reviews.exists():
+        overall_rating = reviews.aggregate(Avg('rating'))['rating__avg']
+    else:
+        overall_rating = None
+
+    context = {
+        'eachProduct': eachProduct,
+        'form': form, 
+        'product': eachProduct,
+        'overall_rating': overall_rating,
+        'ordered': ordered,
+    }
 
     return render(request, 'products/product_detail.html', context)
 
@@ -94,8 +121,28 @@ def search(request):
             return render(request, 'search.html', context)
         else:
             print("No Products")
-            return render(request, 'search.html', {})
-
-
-
+            return render(request, 'search.html', {})  
         
+
+def filter_products_by_price(products, min_price=None, max_price=None):
+    if min_price is not None:
+        products = products.filter(product_price__gte=min_price)
+    if max_price is not None:
+        products = products.filter(product_price__lte=max_price)
+    return products
+
+
+def filter_by_price(request):
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+
+    products = Product.objects.all()
+    
+    if min_price or max_price:
+        products = filter_products_by_price(products, min_price=min_price, max_price=max_price)
+
+    context = {
+        'products': products,
+    }
+
+    return render(request, 'products/display_product.html', context)
