@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="text-center" style="margin-left: 25px;"> Plant Information Hub: </h2><hr>
+
+{% if request.user.is_authenticated and request.user.user_role == 'admin' %} 
+    <div class="text-center mb-3">
+        <a href="{% url 'add_plant' %}" class="btn btn-primary">Add Plant Info</a>
+    </div>
+
+{% endif %} 
+{% if request.user.is_authenticated %} 
+    <div class="text-center mb-3">
+        <a href="{% url 'display_favorite' %}" class="btn btn-primary">Favorite</a>
+    </div>
+{% endif %} 
+
+
+<div class="container">
+    <div class="row justify-content-among m-4">
+
+        {% if plant_info %}
+
+        {% for plant in plant_info %}
+    
+            <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4">
+    
+                <div class="card p-2"  style="height: 50vh;">
+                    <div class="image-container" style="height: 100px; overflow: hidden;">
+                        <img src="{{ plant.plant_image.url }}" class="card-img-top" alt="image" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="card-body">
+                        <p class="card-title"><strong>{{ plant.plant_common_name }} </strong></p>
+                        <p class="card-text">{{ plant.product_description|slice:":25" }}{% if plant.product_description|length > 25 %}...{% endif %}</p>
+                    </div>
+    
+                    <div>
+                        <hr>
+                        <p style="margin-bottom: 10px; margin-left: 20px;">Disease Name: {{ plant.disease_name }}</p>
+                        <p style="margin-bottom: 10px; margin-left: 20px;">Cause: {{ plant.cause }}</p>
+                        <p style="margin-bottom: 10px; margin-left: 20px;">Solution: {{ plant.solution }}</p>
+                    </div>
+
+                <div class="d-flex flex-row justify-content-center mb-3">
+                    <div>
+                        <a href="#" class="btn btn-primary btn-sm "><i class="fas fa-info-circle"></i></a>
+                        <a href="{% url 'add_favorite' plant.pk %}" class="btn btn-primary btn-sm"><i class="far fa-heart"></i></a>
+
+                        {% if request.user.is_authenticated and request.user.user_role == 'admin' %}
+                        <a href="{% url 'update_plant' plant.pk %}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
+                        <a href="{% url 'delete_plant' plant.pk %}" class="btn btn-primary btn-sm"><i class="fas fa-trash-alt"></i></a>
+                        {% endif %}
+                        
+                    </div>
+                </div>  
+            </div>
+        </div>
+        {% if error_message %}
+        <p class="text-danger">{{ error_message }}</p> 
+        {% endif %}
+
+    {% endfor %}
+
+{% else %}
+
+    <p class="text-center">No Plant Info</p>
+
+{% endif %}
+
+    </div>
+</div>
+
+<div class="d-flex justify-content-center">   
+    <div class="row m-5">
+        <div class="col-md-12 m-2">
+
+            {% if plant_info.has_other_pages %}
+                <ul class="pagination justify-content-center">
+                
+                {% if plant_info.has_previous %}  
+                    <li class="page-item">
+                        <a href="?page={{ plant_info.previous_page_number }}" class="page-link">&laquo;</a>
+                    </li>
+
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="?page=1">&laquo;</a>
+                    </li>     
+                {% endif %}
+
+                {% for i in plant_info.paginator.page_range %}
+                    {% if plant_info.number == i %}
+                        <li class="page-item active">
+                            <a class="page-link">{{ i }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                        </li>  
+                    {% endif %}
+                {% endfor %}
+
+
+                {% if plant_info.has_next %}  
+                    <li class="page-item">
+                        <a href="?page={{ plant_info.next_page_number }}" class="page-link">&raquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="?page={{ plant_info.paginator.num_pages }}">&raquo;</a>
+                    </li>     
+                {% endif %}
+
+                </ul>
+            {% endif %}
+
+        </div>
+      </div>
+  </div>
+        
+{% endblock %}

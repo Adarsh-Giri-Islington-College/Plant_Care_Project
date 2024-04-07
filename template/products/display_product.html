@@ -11,51 +11,47 @@
 {% endif %} 
 
 
-<form method="get" action="{% url 'filter_by_price' %}">
-    <article class="filter-group">
-        <header class="card-header">
-            <a href="#" data-toggle="collapse" data-target="#collapse_3" aria-expanded="true" class="">
-                <i class="icon-control fa fa-chevron-down"></i>
-                <h6 class="title">Price range</h6>
-            </a>
-        </header>
-        <div class="filter-content collapse show" id="collapse_3">
-            <div class="card-body">
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label>Min</label>
-                        <select name="min_price" class="mr-2 form-control">
-                            <option value="0">Rs. 0</option>
-                            <option value="50">Rs.50</option>
-                            <option value="100">Rs.100</option>
-                            <option value="150">Rs.150</option>
-                            <option value="200">Rs.200</option>
-                            <option value="500">Rs.500</option>
-                            <option value="1000">Rs.1000</option>
-                        </select>
-                    </div>
-                    <div class="form-group text-right col-md-6">
-                        <label>Max</label>
-                        <select name="max_price" class="mr-2 form-control">
-                            <option value="50">Rs.50</option>
-                            <option value="100">Rs.100</option>
-                            <option value="150">Rs.150</option>
-                            <option value="200">Rs.200</option>
-                            <option value="500">Rs.500</option>
-                            <option value="1000">Rs.1000</option>
-                            <option value="2000">Rs.2000</option>
-                        </select>
-                    </div>
-                </div> <!-- form-row.// -->
-                <button type="submit" class="btn btn-block btn-primary">Apply</button>
-            </div><!-- card-body.// -->
-        </div>
-    </article>
-</form>
-
-
 <div class="container">
-    <div class="row justify-content-among m-4">
+
+    <div class="row">
+
+        <div class="col-lg-3">
+            <form method="get" action="{% url 'filter_by_price' %}">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Price Range</h5>
+                        <div class="form-group">
+                            <label for="min_price">Min</label>
+                            <select name="min_price" id="min_price" class="form-control">
+                                <option value="0">Rs. 0</option>
+                                <option value="50">Rs.50</option>
+                                <option value="100">Rs.100</option>
+                                <option value="150">Rs.150</option>
+                                <option value="200">Rs.200</option>
+                                <option value="500">Rs.500</option>
+                                <option value="1000">Rs.1000</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="max_price">Max</label>
+                            <select name="max_price" id="max_price" class="form-control">
+                                <option value="50">Rs.50</option>
+                                <option value="100">Rs.100</option>
+                                <option value="150">Rs.150</option>
+                                <option value="200">Rs.200</option>
+                                <option value="500">Rs.500</option>
+                                <option value="1000">Rs.1000</option>
+                                <option value="2000">Rs.2000</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Apply</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+
 
 {% if products %}
 

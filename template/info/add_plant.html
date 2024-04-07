@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <h2 class="my-4">Add Plant Information</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="plant_image">Plant Image:</label>
+            {{ form.plant_image }}
+        </div>
+        <div class="form-group">
+            <label for="plant_common_name">Common Name:</label>
+            {{ form.plant_common_name }}
+        </div>
+        <div class="form-group">
+            <label for="plant_scientific_name">Scientific Name:</label>
+            {{ form.plant_scientific_name }}
+        </div>
+        <div class="form-group form-check">
+            {{ form.is_affected }}
+            <label class="form-check-label" for="is_affected">Is Affected?</label>
+        </div>
+        <div class="form-group">
+            <label for="disease_name">Disease Name:</label>
+            {{ form.disease_name }}
+        </div>
+        <div class="form-group">
+            <label for="product_description">Product Description:</label>
+            {{ form.plant_description }}
+        </div>
+        <div class="form-group">
+            <label for="cause">Cause:</label>
+            {{ form.cause }}
+        </div>
+        <div class="form-group">
+            <label for="solution">Solution:</label>
+            {{ form.solution }}
+        </div><br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div
+
+{% endblock %}

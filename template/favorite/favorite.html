@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="text-center" style="margin-left: 25px;"> Favorite Plant Information Hub: </h2><hr> 
+{% if error_message %}
+<p class="text-danger">{{ error_message }}</p> 
+{% endif %}
+
+
+<div class="container">
+    <div class="row justify-content-among m-4">
+
+        {% if favorite_plant %}
+
+        {% for favorite in favorite_plant %}
+    
+            <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4">
+    
+                <div class="card p-2"  style="height: 50vh;">
+                    <div class="image-container" style="height: 100px; overflow: hidden;">
+                        <img src="{{ favorite.plant.plant_image.url }}" class="card-img-top" alt="image" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="card-body">
+                        <p class="card-title"><strong>{{ favorite.plant.plant_common_name }} </strong></p>
+                        <p class="card-text">{{ favorite.plant.plant_description|slice:":25" }}{% if favorite.plant.plant_description|length > 25 %}...{% endif %}</p>
+                    </div>
+    
+                    <div>
+                        <hr>
+                        <p style="margin-bottom: 10px; margin-left: 20px;">Disease Name: {{ favorite.plant.disease_name }}</p>
+                        <p style="margin-bottom: 10px; margin-left: 20px;">Cause: {{ favorite.plant.cause }}</p>
+                        <p style="margin-bottom: 10px; margin-left: 20px;">Solution: {{ favorite.plant.solution }}</p>
+                    </div>
+
+                <div class="d-flex flex-row justify-content-center mb-3">
+                    <div>
+                        <a href="#" class="btn btn-primary btn-sm "><i class="fas fa-info-circle"></i></a>
+                        <a href="{% url 'delete_favorite' favorite.pk %}" class="btn btn-primary btn-sm"><i class="fas fa-trash-alt"></i></a>
+ 
+                    </div>
+                </div>  
+            </div>
+        </div>
+
+        
+    {% endfor %}
+
+{% else %}
+
+    <p class="text-center">No Favorite Plants</p>
+
+{% endif %}
+
+    </div>
+</div>
+
+<div class="d-flex justify-content-center">   
+    <div class="row m-5">
+        <div class="col-md-12 m-2">
+
+            {% if favorite_plant.has_other_pages %}
+                <ul class="pagination justify-content-center">
+                
+                {% if favorite_plant.has_previous %}  
+                    <li class="page-item">
+                        <a href="?page={{ favorite_plant.previous_page_number }}" class="page-link">&laquo;</a>
+                    </li>
+
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="?page=1">&laquo;</a>
+                    </li>     
+                {% endif %}
+
+                {% for i in favorite_plant.paginator.page_range %}
+                    {% if favorite_plant.number == i %}
+                        <li class="page-item active">
+                            <a class="page-link">{{ i }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                        </li>  
+                    {% endif %}
+                {% endfor %}
+
+
+                {% if favorite_plant.has_next %}  
+                    <li class="page-item">
+                        <a href="?page={{ favorite_plant.next_page_number }}" class="page-link">&raquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="?page={{ favorite_plant.paginator.num_pages }}">&raquo;</a>
+                    </li>     
+                {% endif %}
+
+                </ul>
+            {% endif %}
+
+        </div>
+      </div>
+  </div>
+        
+{% endblock %}

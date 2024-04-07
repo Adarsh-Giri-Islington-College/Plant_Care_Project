@@ -28,6 +28,8 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('cart/', include('cart.urls')),
     path('order/', include('order.urls')),
+    path('info/', include('info.urls')),
+    path('favorite/', include('favorite.urls')),
     path('predictImage',views.predictImage,name='predictImage'),
 ]
 
