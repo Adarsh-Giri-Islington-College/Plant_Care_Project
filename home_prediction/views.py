@@ -5,7 +5,6 @@ import tensorflow as tf
 from keras.preprocessing import image
 import json
 from products.models import Product
-from django.db.models import Q
 
 
 img_height, img_width = 256, 256

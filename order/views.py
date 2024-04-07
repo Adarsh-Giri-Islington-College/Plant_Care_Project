@@ -129,7 +129,7 @@ def order_history(request):
 
 
 def admin_view_orders(request):
-    orders_with_details = Order.objects.select_related('user').prefetch_related('orderitem_set__product').all()
+    orders_with_details = Order.objects.select_related('user').prefetch_related('orderitem_set__product').all().order_by('-order_date')
 
     context = {
         'orders_with_details': orders_with_details

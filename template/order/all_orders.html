@@ -1,39 +1,48 @@
-<!-- admin_view_orders.html -->
-
 {% extends 'base.html' %}
 
 {% block content %}
 
 <div class="container">
   {% if orders_with_details %}
-    <h1>All Orders with Usernames and Product Details</h1>
-    <ul class="list-group">
+    <h1 class="mt-5 mb-4">All Orders with Usernames and Product Details</h1>
+    <div class="list-group">
       {% for order in orders_with_details %}
-        <li class="list-group-item">
+        <div class="list-group-item mb-4">
           <h4>Order ID: {{ order.pk }}</h4>
           <p><strong>Order Date:</strong> {{ order.order_date }}</p>
           <p><strong>User:</strong> {{ order.user.username }}</p>
           <p><strong>Email:</strong> {{ order.user.email }}</p>
           <p><strong>Total Price:</strong> Rs. {{ order.total_price }}</p>
           <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
-          <div class="row">
-            {% for order_item in order.orderitem_set.all %}
-              <div class="col-md-4">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Product Name: {{ order_item.product.product_name }}</h5>
-                    <p class="card-text"><strong>Quantity:</strong> {{ order_item.quantity }}</p>
-                    <p class="card-text"><strong>Subtotal:</strong> Rs. {{ order_item.sub_total }}</p>
+          <table class="table mt-3">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order_item in order.orderitem_set.all %}
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <img src="{{ order_item.product.product_image.url }}" alt="{{ cart_item.product.product_name }}" class="img-thumbnail mr-2" style="max-height: 50px;">
                   </div>
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-        </li>
+                  </td>
+                  <td>{{ order_item.product.product_name }}</td>
+                  <td>{{ order_item.quantity }}</td>
+                  <td>Rs. {{ order_item.sub_total }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       {% endfor %}
-    </ul>
+    </div>
   {% else %}
-    <p>No orders found.</p>
+    <p class="mt-5">No orders found.</p>
   {% endif %}
 </div>
 

@@ -4,10 +4,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from . models import Product, product_form, Review, ReviewForm
 from users.models import User
 from django.db.models import Avg
-
-
-def is_admin(user):
-    return user.is_authenticated and user.user_role == User.ADMIN
+from users.views import is_admin
 
 
 def display_products(request):

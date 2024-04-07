@@ -4,7 +4,6 @@ from info.models import Plant_Info
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
-
 def display_favorite(request):
     if request.user.is_authenticated:
         favorite_plant = Favorite.objects.filter(user=request.user)
@@ -25,7 +24,7 @@ def display_favorite(request):
         return render(request, 'favorite/favorite.html', context)
     else:
         return redirect('login')
-    
+
 
 def add_favorite(request, pk):
     plant = get_object_or_404(Plant_Info, pk=pk)

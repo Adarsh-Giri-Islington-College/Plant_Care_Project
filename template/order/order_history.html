@@ -4,31 +4,42 @@
 
 <div class="container">
   {% if user_orders %}
-    <h1>Your Order History</h1>
-    <ul class="list-group">
+    <h1 class="mt-5 mb-4">Your Order History</h1>
+    <div class="list-group">
       {% for order in user_orders %}
-        <li class="list-group-item">
-          <h4>Order Date: {{ order.order_date }}</h4>
+        <div class="list-group-item mb-4">
+          <h4 class="mb-3">Order Date: {{ order.order_date }}</h4>
           <p><strong>Total Price:</strong> Rs. {{ order.total_price }}</p>
           <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
-          <div class="row">
-            {% for item in order.orderitem_set.all %}
-              <div class="col-md-4">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Product Name: {{ item.product.product_name }}</h5>
-                    <p class="card-text"><strong>Quantity:</strong> {{ item.quantity }}</p>
-                    <p class="card-text"><strong>Subtotal:</strong> Rs. {{ item.sub_total }}</p>
+          <table class="table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in order.orderitem_set.all %}
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <img src="{{ item.product.product_image.url }}" alt="{{ cart_item.product.product_name }}" class="img-thumbnail mr-2" style="max-height: 50px;">
                   </div>
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-        </li>
+                  </td>
+                  <td>{{ item.product.product_name }}</td>
+                  <td>{{ item.quantity }}</td>
+                  <td>Rs. {{ item.sub_total }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       {% endfor %}
-    </ul>
+    </div>
   {% else %}
-    <p>No orders found.</p>
+    <p class="mt-5">No orders found.</p>
   {% endif %}
 </div>
 

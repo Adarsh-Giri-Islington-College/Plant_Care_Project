@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from . models import Plant_Info, Plant_Form
+from django.contrib.auth.decorators import user_passes_test
+from users.views import is_admin
 
 
 def display_plant_info(request):
@@ -22,6 +24,15 @@ def display_plant_info(request):
     return render(request, 'info/display_plant.html', context)
 
 
+def plant_detail(request, pk):
+    eachPlant = Plant_Info.objects.get(plant_id=pk)
+    context = {
+        'eachPlant': eachPlant,
+    }
+    return render(request, 'info/plant_detail.html', context)
+
+
+@user_passes_test(is_admin)
 def add_plant(request):
     if request.method == 'POST':
         form = Plant_Form(request.POST, request.FILES)
@@ -37,6 +48,7 @@ def add_plant(request):
     return render(request, 'info/add_plant.html', context)
 
 
+@user_passes_test(is_admin)
 def update_plant(request, pk):
     plant = get_object_or_404(Plant_Info, plant_id=pk)
 
@@ -56,7 +68,8 @@ def update_plant(request, pk):
     return render(request, 'info/update_plant.html', context)
 
 
+@user_passes_test(is_admin)
 def delete_plant(request, pk):
-    eachProduct = Plant_Info.objects.get(plant_id=pk)
-    eachProduct.delete()
+    eachPlant = Plant_Info.objects.get(plant_id=pk)
+    eachPlant.delete()
     return redirect('display_plant_info')

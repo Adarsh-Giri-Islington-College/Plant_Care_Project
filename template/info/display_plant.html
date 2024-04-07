@@ -44,7 +44,7 @@
 
                 <div class="d-flex flex-row justify-content-center mb-3">
                     <div>
-                        <a href="#" class="btn btn-primary btn-sm "><i class="fas fa-info-circle"></i></a>
+                        <a href="{% url 'plant_detail' plant.pk %}" class="btn btn-primary btn-sm "><i class="fas fa-info-circle"></i></a>
                         <a href="{% url 'add_favorite' plant.pk %}" class="btn btn-primary btn-sm"><i class="far fa-heart"></i></a>
 
                         {% if request.user.is_authenticated and request.user.user_role == 'admin' %}

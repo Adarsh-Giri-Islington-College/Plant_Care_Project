@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{ eachPlant.plant_image.url }}" alt="{{ eachPlant.plant_common_name }}" class="img-fluid">
+        </div>
+        <div class="col-md-6">
+            <h2>{{ eachPlant.plant_common_name }}</h2>
+            <p><strong>Scientific Name:</strong> {{ eachPlant.plant_scientific_name }}</p>
+            <p><strong>Is Affected:</strong> {% if eachPlant.is_affected %}Yes{% else %}No{% endif %}</p>
+            {% if eachPlant.is_affected %}
+                <p><strong>Disease Name:</strong> {{ eachPlant.disease_name }}</p>
+                <p><strong>Cause:</strong> {{ eachPlant.cause }}</p>
+                <p><strong>Solution:</strong> {{ eachPlant.solution }}</p>
+            {% endif %}
+            <p><strong>Description:</strong></p>
+            <p>{{ eachPlant.plant_description }}</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
