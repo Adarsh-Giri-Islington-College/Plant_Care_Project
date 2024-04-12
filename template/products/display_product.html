@@ -79,6 +79,7 @@
                 <div class="d-flex flex-row justify-content-center mb-3">
                     <div>
                         <a href="{% url 'product_detail' product.pk %}" class="btn btn-primary btn-sm "><i class="fas fa-info-circle"></i></a>
+
                         <a href="{% url 'add_to_cart' product_id=product.pk %}" class="btn btn-primary btn-sm"><i class="fas fa-cart-plus"></i></a>
 
                         {% if request.user.is_authenticated and request.user.user_role == 'admin' or request.user.user_role == 'staff' %}

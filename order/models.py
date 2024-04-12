@@ -22,7 +22,7 @@ class Order(models.Model):
     order_id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     payment = models.ForeignKey(Payment, on_delete=models.CASCADE)
-    order_date = models.DateTimeField(default=timezone.now)
+    order_date = models.DateTimeField(auto_now_add=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     shipping_address = models.CharField(max_length=50)
     products = models.ManyToManyField(Product, through='OrderItem') 

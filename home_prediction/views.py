@@ -5,6 +5,7 @@ import tensorflow as tf
 from keras.preprocessing import image
 import json
 from products.models import Product
+from django.contrib.auth.decorators import login_required
 
 
 img_height, img_width = 256, 256
@@ -17,8 +18,13 @@ labelInfo = json.loads(labelInfo)
 model = tf.keras.models.load_model('./models/plant_care_model.h5')
 
 
+@login_required
 def index(request):
-    return render(request, 'index.html')
+    if request.user.user_role == 'user':
+        return render(request, 'index.html')
+    else:
+       return render(request, 'users/admin_dashboard.html')
+
 
 
 def predictImage(request):

@@ -4,7 +4,6 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils import timezone
 from django.core.mail import send_mail
-from django.conf import settings
 
 
 def is_admin(user):
@@ -63,9 +62,14 @@ def login(request):
         user = auth.authenticate(email=email, password=password)
 
         if user is not None and is_not_banned(user):
-            auth.login(request, user)
-            print('Login Successful!')
-            return redirect('display_products')
+            if user.user_role == 'user':
+                auth.login(request, user)
+                print('Login Successful!')
+                return redirect('display_products')
+            else:
+                auth.login(request, user)
+                request.session.set_expiry(0)  
+                return redirect('admin_dashboard')
         elif user is not None and user.is_banned:
             ban_until = user.ban_until.strftime("%Y-%m-%d %H:%M:%S") if user.ban_until else None
             error_message = 'Sorry you have been banned until ' + ban_until + '.'
@@ -81,6 +85,12 @@ def login(request):
             return render(request, 'users/login.html', context)
     else:
         return render(request, 'users/login.html') 
+
+
+def admin_dashboard(request):
+    user = request.user  
+    context = {'user': user}
+    return render(request, 'users/admin_dashboard.html', context)
 
 
 @login_required

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <title>Admin Navbar</title>
+    <style>
+      body {
+          font-family: Arial;
+          margin: 0;
+          padding: 0;
+      }
+      .sidebar {
+          background-color: #333;
+          color: #fff;
+          width: 200px;
+          height: 100%;
+          position: fixed;
+          top: 0;
+          left: 0;
+          overflow-y: auto;
+          padding-top: 20px;
+      }
+      .sidebar ul {
+          list-style-type: none;
+          padding: 0;
+      }
+      .sidebar ul li {
+          padding: 10px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+      }
+      .sidebar ul li:hover {
+          background-color: #555;
+      }
+      .sidebar ul li a {
+          color: #fff;
+          text-decoration: none;
+      }
+      .header {
+          background-color: #444;
+          color: #fff;
+          padding: 20px;
+          text-align: center;
+      }
+      .header h1 {
+          margin: 0;
+          font-size: 24px;
+      }
+      .user-profile {
+          margin-top: 20px;
+          text-align: center;
+      }
+      .main {
+          margin-left: 200px;
+      }
+  </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="user-profile">
+            <img src="{{ user.user_image.url }}" alt="User Avatar" style="border-radius: 50%; width: 50px; height: 50px;">
+            <p>Welcome {{ user.username|capfirst }}</p>
+        </div>
+        <ul>
+            <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'view_users' %}">Users</a></li>
+            <li><a href="#">Products</a></li>
+            <li><a href="#">Plant Info</a></li>
+            <li><a href="{% url 'logout' %}">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </a></li>
+        </ul>
+      </div>
+
+      <div class="main">
+        {% block content %}
+    
+        {% endblock %}
+      </div>
+</body>
+</html>
