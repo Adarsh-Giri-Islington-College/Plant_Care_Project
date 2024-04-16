@@ -183,3 +183,24 @@ def unban_user(request, user_id):
     
     context = {'user': user}
     return render(request, 'users/view_user.html', context)
+
+
+def user_search(request):
+    if request.method == "GET":
+        query = request.GET.get('user_query')
+        
+        if query:
+            users = User.objects.filter(username__icontains=query)
+            user_role_choices = User.ROLE_CHOICES 
+
+            context = {
+                'users': users,
+                'user_role_choices': user_role_choices
+                }
+            
+            if is_admin(request.user):
+                return render(request, 'users/view_users.html', context)
+        else:
+            return redirect('view_users')  
+    else:
+        return redirect('view_users')

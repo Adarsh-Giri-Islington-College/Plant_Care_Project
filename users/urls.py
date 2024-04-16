@@ -14,4 +14,5 @@ urlpatterns = [
     path('delete_user/<int:user_id>', views.delete_user, name='delete_user'),
     path('ban_user/<int:user_id>', views.ban_user, name='ban_user'),
     path('unban_user/<int:user_id>', views.unban_user, name='unban_user'),
+    path('user_search/', views.user_search, name='user_search'),
 ]

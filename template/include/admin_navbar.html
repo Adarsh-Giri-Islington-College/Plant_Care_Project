@@ -14,7 +14,7 @@
           padding: 0;
       }
       .sidebar {
-          background-color: #333;
+          background-color: #0f3d0f;
           color: #fff;
           width: 200px;
           height: 100%;
@@ -34,7 +34,7 @@
           transition: background-color 0.3s;
       }
       .sidebar ul li:hover {
-          background-color: #555;
+          background-color: #00cc44;
       }
       .sidebar ul li a {
           color: #fff;
@@ -68,8 +68,9 @@
         <ul>
             <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
             <li><a href="{% url 'view_users' %}">Users</a></li>
-            <li><a href="#">Products</a></li>
-            <li><a href="#">Plant Info</a></li>
+            <li><a href="{% url 'display_products' %}">Products</a></li>
+            <li><a href="{% url 'display_plant_info' %}">Plant Info</a></li>
+            <li><a href="{% url 'admin_view_orders' %}">Orders</a></li>
             <li><a href="{% url 'logout' %}">
               <i class="fas fa-sign-out-alt"></i> Logout
             </a></li>

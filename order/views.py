@@ -3,6 +3,7 @@ import requests
 import json
 from cart.models import Cart
 from .models import Order, OrderItem, Payment
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 def payment(request):
@@ -130,8 +131,18 @@ def order_history(request):
 
 def admin_view_orders(request):
     orders_with_details = Order.objects.select_related('user').prefetch_related('orderitem_set__product').all().order_by('-order_date')
-
+        
+    paginator = Paginator(orders_with_details, 20)
+    
+    page_num = request.GET.get("page")
+    try:
+        orders = paginator.page(page_num)
+    except PageNotAnInteger:
+        orders = paginator.page(1)
+    except EmptyPage:
+        orders = paginator.page(paginator.num_pages)
+    
     context = {
-        'orders_with_details': orders_with_details
+        'orders': orders,
     }
     return render(request, 'order/all_orders.html', context)

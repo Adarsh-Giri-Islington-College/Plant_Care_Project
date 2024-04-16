@@ -1,49 +1,150 @@
-{% extends 'base.html' %}
+{% extends 'include/admin_navbar.html' %}
 
 {% block content %}
 
+<style>
+  .header {
+      background-color: #0f3d0f;
+      color: #fff;
+      width: 100%;
+      height: 60px;
+      font-size: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  }
+  .header p {
+      padding-top: 15px;
+  }
+  .header a {
+      background-color: #009933;
+      color: #fff;
+  }
+  .search-bar {
+      background-color: #4CAF50; 
+      border-radius: 5px;
+  }
+  .search-btn {
+      background-color: #4CAF50; 
+      border: none;
+      color: white;
+  }
+  .search-icon {
+      color: white;
+  }
+  table thead {
+      background-color: #4CAF50; 
+      color: #fff; 
+  }
+  table tbody tr:nth-child(odd) {
+      background-color: #e6ffe6; 
+  }
+
+  table tbody tr:nth-child(even) {
+      background-color: #fff; 
+  }
+  .orders {
+    background-color: #e6ffe6; 
+  }
+</style>
+
+
+<div class="header text-center">
+  <p class="mx-auto"> All Orders</p>
+</div><br>
+
 <div class="container">
-  {% if orders_with_details %}
-    <h1 class="mt-5 mb-4">All Orders with Usernames and Product Details</h1>
+  {% if orders %}
     <div class="list-group">
-      {% for order in orders_with_details %}
-        <div class="list-group-item mb-4">
-          <h4>Order ID: {{ order.pk }}</h4>
-          <p><strong>Order Date:</strong> {{ order.order_date }}</p>
-          <p><strong>User:</strong> {{ order.user.username }}</p>
-          <p><strong>Email:</strong> {{ order.user.email }}</p>
-          <p><strong>Total Price:</strong> Rs. {{ order.total_price }}</p>
-          <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
-          <table class="table mt-3">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Product Name</th>
-                <th>Quantity</th>
-                <th>Subtotal</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for order_item in order.orderitem_set.all %}
+      {% for order in orders %}
+        <div class="list-group-item mb-4 orders">
+          <h6><b>Order ID: {{ order.pk }}</b></h6><hr>
+          <p class="small"><strong>Order Date:</strong> {{ order.order_date }}</p>
+          <p class="small"><strong>Order By (Username):</strong> {{ order.user.username }}</p>
+          <p class="small"><strong>Email:</strong> {{ order.user.email }}</p>
+          <p class="small"><strong>Total Price:</strong> Rs. {{ order.total_price }}</p>
+          <p class="small"><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
+          <div class="table-responsive">
+            <table class="table mt-3">
+              <thead>
                 <tr>
-                  <td>
-                    <div class="d-flex align-items-center">
-                      <img src="{{ order_item.product.product_image.url }}" alt="{{ cart_item.product.product_name }}" class="img-thumbnail mr-2" style="max-height: 50px;">
-                  </div>
-                  </td>
-                  <td>{{ order_item.product.product_name }}</td>
-                  <td>{{ order_item.quantity }}</td>
-                  <td>Rs. {{ order_item.sub_total }}</td>
+                  <th class="small"> Product Image</th>
+                  <th class="small">Product Name</th>
+                  <th class="small">Quantity</th>
+                  <th class="small">Subtotal</th>
                 </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {% for order_item in order.orderitem_set.all %}
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <img src="{{ order_item.product.product_image.url }}" alt="{{ cart_item.product.product_name }}" class="img-thumbnail mr-2" style="max-height: 50px;">
+                    </div>
+                    </td>
+                    <td class="small">{{ order_item.product.product_name }}</td>
+                    <td class="small">{{ order_item.quantity }}</td>
+                    <td class="small">Rs. {{ order_item.sub_total }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
       {% endfor %}
     </div>
   {% else %}
     <p class="mt-5">No orders found.</p>
   {% endif %}
+</div>
+
+
+<div class="d-flex justify-content-center">   
+  <div class="row m-5">
+      <div class="col-md-12 m-2">
+
+          {% if orders.has_other_pages %}
+              <ul class="pagination justify-content-center">
+              
+              {% if orders.has_previous %}  
+                  <li class="page-item">
+                      <a href="?page={{ products.previous_page_number }}" class="page-link">&laquo;</a>
+                  </li>
+
+              {% else %}
+                  <li class="page-item disabled">
+                      <a class="page-link" href="?page=1">&laquo;</a>
+                  </li>     
+              {% endif %}
+
+              {% for i in orders.paginator.page_range %}
+                  {% if orders.number == i %}
+                      <li class="page-item active">
+                          <a class="page-link">{{ i }}</a>
+                      </li>
+                  {% else %}
+                      <li class="page-item">
+                          <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                      </li>  
+                  {% endif %}
+              {% endfor %}
+
+
+              {% if orders.has_next %}  
+                  <li class="page-item">
+                      <a href="?page={{ orders.next_page_number }}" class="page-link">&raquo;</a>
+                  </li>
+              {% else %}
+                  <li class="page-item disabled">
+                      <a class="page-link" href="?page={{ orders.paginator.num_pages }}">&raquo;</a>
+                  </li>     
+              {% endif %}
+
+              </ul>
+          {% endif %}
+
+      </div>
+    </div>
 </div>
 
 {% endblock %}

@@ -20,8 +20,11 @@ def display_plant_info(request):
         plant_info = paginator.page(paginator.num_pages)
 
     context = {'plant_info': plant_info}
-
-    return render(request, 'info/display_plant.html', context)
+    
+    if is_admin(request.user):
+        return render(request, 'info/admin_display_plant.html', context)
+    else:
+        return render(request, 'info/display_plant.html', context)
 
 
 def plant_detail(request, pk):
@@ -73,3 +76,22 @@ def delete_plant(request, pk):
     eachPlant = Plant_Info.objects.get(plant_id=pk)
     eachPlant.delete()
     return redirect('display_plant_info')
+
+
+def plant_search(request):
+    if request.method == "GET":
+        query = request.GET.get('query')
+        
+        if query:
+            plant = Plant_Info.objects.filter(plant_common_name__icontains=query)
+
+            context = {'plant': plant}
+            
+            if is_admin(request.user):
+                return render(request, 'info/admin_display_plant.html', context)
+            else:
+                return render(request, 'info/display_plant.html', context)
+        else:
+            return redirect('display_plant_info')  
+    else:
+        return redirect('display_plant_info')

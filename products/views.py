@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from . models import Product, product_form, Review, ReviewForm
-from users.models import User
 from django.db.models import Avg
 from users.views import is_admin
 
@@ -23,11 +22,19 @@ def display_products(request):
 
     context = {'products': products}
 
-    return render(request, 'products/display_product.html', context)
+    if is_admin(request.user):
+        return render(request, 'products/admin_display_product.html', context)
+    else:
+        return render(request, 'products/display_product.html', context)
 
 
 def product_detail(request, pk):
     eachProduct = Product.objects.get(product_id=pk)
+
+    has_reviewed = True
+
+    if Review.objects.filter(product=eachProduct, user=request.user).exists():
+        has_reviewed = False
 
     if request.method == 'POST':
         form = ReviewForm(request.POST)
@@ -50,12 +57,16 @@ def product_detail(request, pk):
     else:
         overall_rating = None
 
+    rating_range = range(5)
+
     context = {
         'eachProduct': eachProduct,
         'form': form, 
         'product': eachProduct,
         'overall_rating': overall_rating,
         'ordered': ordered,
+        'rating_range': rating_range, 
+        'has_reviewed': has_reviewed,
     }
 
     return render(request, 'products/product_detail.html', context)
@@ -111,15 +122,19 @@ def search(request):
         query = request.GET.get('query')
         
         if query:
-            products = Product.objects.filter(product_name__icontains=query)
+            products = Product.objects.filter(product_name__icontains=query) | Product.objects.filter(product_id__icontains=query)
 
             context = {'products': products}
             
-            return render(request, 'search.html', context)
+            if is_admin(request.user):
+                return render(request, 'products/admin_display_product.html', context)
+            else:
+                return render(request, 'products/display_product.html', context)
         else:
-            print("No Products")
-            return render(request, 'search.html', {})  
-        
+            return redirect('display_products')  
+    else:
+        return redirect('display_products')
+          
 
 def filter_products_by_price(products, min_price=None, max_price=None):
     if min_price is not None:

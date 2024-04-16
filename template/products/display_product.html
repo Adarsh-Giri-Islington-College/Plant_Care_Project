@@ -2,154 +2,145 @@
 
 {% block content %}
 
-<h2 class="text-center" style="margin-left: 25px;"> Our Products: </h2><hr>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Products</title>
+</head>
 
-{% if request.user.is_authenticated and request.user.user_role == 'admin' or request.user.user_role == 'staff' %}
-<div class="text-center mb-3">
-        <a href="{% url 'add_product' %}" class="btn btn-primary">Add Product</a>
-    </div>
-{% endif %} 
+<body>
+    <div class="container">
+        <h2 class="text-center"> Our Products: </h2><hr>
+        <div class="row">
 
-
-<div class="container">
-
-    <div class="row">
-
-        <div class="col-lg-3">
-            <form method="get" action="{% url 'filter_by_price' %}">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Price Range</h5>
-                        <div class="form-group">
-                            <label for="min_price">Min</label>
-                            <select name="min_price" id="min_price" class="form-control">
-                                <option value="0">Rs. 0</option>
-                                <option value="50">Rs.50</option>
-                                <option value="100">Rs.100</option>
-                                <option value="150">Rs.150</option>
-                                <option value="200">Rs.200</option>
-                                <option value="500">Rs.500</option>
-                                <option value="1000">Rs.1000</option>
-                            </select>
+            <div class="col-lg-3">
+                <form method="get" action="{% url 'filter_by_price' %}">
+                    <div style="background-color: white;">
+                        <div class="card-body">
+                            <h5 class="card-title">Price Range</h5>
+                            <div class="form-group">
+                                <label for="min_price">Min</label>
+                                <select name="min_price" id="min_price" class="form-control">
+                                    <option value="0">Rs. 0</option>
+                                    <option value="50">Rs.50</option>
+                                    <option value="100">Rs.100</option>
+                                    <option value="150">Rs.150</option>
+                                    <option value="200">Rs.200</option>
+                                    <option value="500">Rs.500</option>
+                                    <option value="1000">Rs.1000</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="max_price">Max</label>
+                                <select name="max_price" id="max_price" class="form-control">
+                                    <option value="50">Rs.50</option>
+                                    <option value="100">Rs.100</option>
+                                    <option value="150">Rs.150</option>
+                                    <option value="200">Rs.200</option>
+                                    <option value="500">Rs.500</option>
+                                    <option value="1000">Rs.1000</option>
+                                    <option value="2000">Rs.2000</option>
+                                </select>
+                            </div><br>
+                            <button type="submit" class="btn btn-primary btn-block">Apply</button>
                         </div>
-                        <div class="form-group">
-                            <label for="max_price">Max</label>
-                            <select name="max_price" id="max_price" class="form-control">
-                                <option value="50">Rs.50</option>
-                                <option value="100">Rs.100</option>
-                                <option value="150">Rs.150</option>
-                                <option value="200">Rs.200</option>
-                                <option value="500">Rs.500</option>
-                                <option value="1000">Rs.1000</option>
-                                <option value="2000">Rs.2000</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block">Apply</button>
                     </div>
-                </div>
-            </form>
-        </div>
-
-
-
-
-{% if products %}
-
-    {% for product in products %}
-
-        <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4">
-
-            <div class="card p-2"  style="height: 50vh;">
-                <a href="{% url 'product_detail' product.pk %}">
-                    <div class="image-container" style="height: 100px; overflow: hidden;">
-                        <img src="{{ product.product_image.url }}" class="card-img-top" alt="image" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                </a>
-                <div class="card-body">
-                    <p class="card-title"><strong>{{ product.product_name }} </strong></p>
-                    <p class="card-text">{{ product.product_description|slice:":25" }}{% if product.product_description|length > 25 %}...{% endif %}</p>
-                    <p class="card-title"><strong>{{ product.product_quantity }} </strong></p>
-                </div>
-
-                <div>
-                    <hr>
-                    <p style="margin-bottom: 10px; margin-left: 20px;"> <strong>Rs.</strong> {{ product.product_price }}</p>
-                </div>
-
-                <div class="d-flex flex-row justify-content-center mb-3">
-                    <div>
-                        <a href="{% url 'product_detail' product.pk %}" class="btn btn-primary btn-sm "><i class="fas fa-info-circle"></i></a>
-
-                        <a href="{% url 'add_to_cart' product_id=product.pk %}" class="btn btn-primary btn-sm"><i class="fas fa-cart-plus"></i></a>
-
-                        {% if request.user.is_authenticated and request.user.user_role == 'admin' or request.user.user_role == 'staff' %}
-                        <a href="{% url 'update_product' product.pk %}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
-                        <a href="{% url 'delete_product' product.pk %}" class="btn btn-primary btn-sm"><i class="fas fa-trash-alt"></i></a>
-                        {% endif %}
- 
-                    </div>
-                </div>  
+                </form>
             </div>
-        </div>
 
-        
-    {% endfor %}
+            {% if products %}
+                {% for product in products %}
 
-{% else %}
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4">
 
-    <p class="text-center">No Products</p>
+                        <div style="height: 50vh; background-color: white;">
+                            <a href="{% url 'product_detail' product.pk %}">
+                                <div class="image-container" style="height: 100px; overflow: hidden;">
+                                    <img src="{{ product.product_image.url }}" class="card-img-top" alt="image" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                            </a>
+                            <div class="card-body">
+                                <p class="card-title"><strong>{{ product.product_name }} </strong></p>
+                                <p class="card-text">{{ product.product_description|slice:":25" }}{% if product.product_description|length > 25 %}...{% endif %}</p>
+                                <p class="card-title"><strong>{{ product.product_quantity }} </strong></p>
+                            </div>
 
-{% endif %}
+                            <div>
+                                <hr>
+                                <p style="margin-bottom: 10px; margin-left: 20px;"> <strong>Rs.</strong> {{ product.product_price }}</p>
+                            </div>
 
-    </div>
-</div>
+                            <div class="d-flex flex-row justify-content-center mb-3">
+                                <div>
+                                    <a href="{% url 'product_detail' product.pk %}" class="btn btn-primary btn-sm "><i class="fas fa-info-circle"></i></a>
+                                    <a href="{% url 'add_to_cart' product_id=product.pk %}" class="btn btn-primary btn-sm"><i class="fas fa-cart-plus"></i></a>
+                                </div>
+                            </div>  
+                        </div>
+                    </div>
 
-<div class="d-flex justify-content-center">   
-    <div class="row m-5">
-        <div class="col-md-12 m-2">
-
-            {% if products.has_other_pages %}
-                <ul class="pagination justify-content-center">
-                
-                {% if products.has_previous %}  
-                    <li class="page-item">
-                        <a href="?page={{ products.previous_page_number }}" class="page-link">&laquo;</a>
-                    </li>
-
-                {% else %}
-                    <li class="page-item disabled">
-                        <a class="page-link" href="?page=1">&laquo;</a>
-                    </li>     
-                {% endif %}
-
-                {% for i in products.paginator.page_range %}
-                    {% if products.number == i %}
-                        <li class="page-item active">
-                            <a class="page-link">{{ i }}</a>
-                        </li>
-                    {% else %}
-                        <li class="page-item">
-                            <a href="?page={{ i }}" class="page-link">{{ i }}</a>
-                        </li>  
-                    {% endif %}
+                    
                 {% endfor %}
 
+            {% else %}
 
-                {% if products.has_next %}  
-                    <li class="page-item">
-                        <a href="?page={{ products.next_page_number }}" class="page-link">&raquo;</a>
-                    </li>
-                {% else %}
-                    <li class="page-item disabled">
-                        <a class="page-link" href="?page={{ products.paginator.num_pages }}">&raquo;</a>
-                    </li>     
-                {% endif %}
+                <p class="text-center">No Products</p>
 
-                </ul>
             {% endif %}
 
         </div>
-      </div>
-  </div>
-        
+    </div>
+
+    <div class="d-flex justify-content-center">   
+        <div class="row m-5">
+            <div class="col-md-12 m-2">
+
+                {% if products.has_other_pages %}
+                    <ul class="pagination justify-content-center">
+                    
+                    {% if products.has_previous %}  
+                        <li class="page-item">
+                            <a href="?page={{ products.previous_page_number }}" class="page-link">&laquo;</a>
+                        </li>
+
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="?page=1">&laquo;</a>
+                        </li>     
+                    {% endif %}
+
+                    {% for i in products.paginator.page_range %}
+                        {% if products.number == i %}
+                            <li class="page-item active">
+                                <a class="page-link">{{ i }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                            </li>  
+                        {% endif %}
+                    {% endfor %}
+
+
+                    {% if products.has_next %}  
+                        <li class="page-item">
+                            <a href="?page={{ products.next_page_number }}" class="page-link">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="?page={{ products.paginator.num_pages }}">&raquo;</a>
+                        </li>     
+                    {% endif %}
+
+                    </ul>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
 {% endblock %}

@@ -1,0 +1,168 @@
+{% extends 'include/admin_navbar.html' %}
+
+{% block content %}
+
+<style>
+    .header {
+        background-color: #0f3d0f;
+        color: #fff;
+        width: 100%;
+        height: 60px;
+        font-size: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .header p {
+        padding-top: 15px;
+    }
+    .header button {
+        background-color: #009933;
+        color: #fff;
+    }
+    .search-bar {
+        background-color: #4CAF50; 
+        border-radius: 5px;
+    }
+    .search-btn {
+        background-color: #4CAF50; 
+        border: none;
+        color: white;
+    }
+    .search-icon {
+        color: white;
+    }
+    table thead {
+        background-color: #4CAF50; 
+        color: #fff; 
+    }
+    table tbody tr:nth-child(odd) {
+        background-color: #e6ffe6; 
+        color: #fff; 
+    }
+
+    table tbody tr:nth-child(even) {
+        background-color: #fff; 
+    }
+</style>
+
+<script>
+    function openAddProductPopup() {
+        var popup = window.open("{% url 'add_product' %}", "Add Product Popup", "width=600, height=400");
+        popup.focus(); // Optional: ensure the popup gets focus
+    }
+</script>
+
+<div class="header text-center">
+    <p class="mx-auto">Manage Products</p>
+    <button onclick="openAddProductPopup()" class="btn">Add Product</button>
+</div>
+
+<div class="container">
+    <div class="row mt-3">
+        <div class="col-md-6 mx-auto">
+            <form action="{% url 'search' %}" method="get" class="rounded p-2 search-bar">
+                <div class="input-group">
+                    <input class="form-control rounded-0" type="text" name="query" placeholder="Search Products" aria-label="Search">
+                    <div class="input-group-append">
+                        <button class="btn rounded-0 search-btn" type="submit"><i class="fas fa-search search-icon"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div><br>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col" class="small">Image</th>
+                    <th scope="col" class="small">Name</th>
+                    <th scope="col" class="small">Description</th>
+                    <th scope="col" class="small">Quantity</th>
+                    <th scope="col" class="small">Price</th>
+                    <th scope="col" class="small">Plant For</th>
+                    <th scope="col" class="small">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% if products %}
+                {% for product in products %}
+                <tr>
+                    <td>
+                        <a href="{% url 'product_detail' product.pk %}">
+                            <img src="{{ product.product_image.url }}" class="img-thumbnail" alt="Product Image" style="max-width: 50px;">
+                        </a>
+                    </td>
+                    <td class="small">{{ product.product_name }}</td>
+                    <td class="small">{{ product.product_description }}</td>
+                    <td class="small">{{ product.product_quantity }}</td>
+                    <td class="small">{{ product.product_price }}</td>
+                    <td class="small">{{ product.product_for }}</td>
+                    <td class="small">
+                        <a href="{% url 'update_product' product.pk %}" class="btn btn-primary btn-sm"><i class="fas fa-edit">Edit</i></a>
+                        <a href="{% url 'delete_product' product.pk %}" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-center">No Products</td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="d-flex justify-content-center">   
+    <div class="row m-5">
+        <div class="col-md-12 m-2">
+
+            {% if products.has_other_pages %}
+                <ul class="pagination justify-content-center">
+                
+                {% if products.has_previous %}  
+                    <li class="page-item">
+                        <a href="?page={{ products.previous_page_number }}" class="page-link">&laquo;</a>
+                    </li>
+
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="?page=1">&laquo;</a>
+                    </li>     
+                {% endif %}
+
+                {% for i in products.paginator.page_range %}
+                    {% if products.number == i %}
+                        <li class="page-item active">
+                            <a class="page-link">{{ i }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                        </li>  
+                    {% endif %}
+                {% endfor %}
+
+
+                {% if products.has_next %}  
+                    <li class="page-item">
+                        <a href="?page={{ products.next_page_number }}" class="page-link">&raquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="?page={{ products.paginator.num_pages }}">&raquo;</a>
+                    </li>     
+                {% endif %}
+
+                </ul>
+            {% endif %}
+
+        </div>
+      </div>
+  </div>
+
+  
+{% endblock %}

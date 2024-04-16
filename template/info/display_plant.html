@@ -4,12 +4,7 @@
 
 <h2 class="text-center" style="margin-left: 25px;"> Plant Information Hub: </h2><hr>
 
-{% if request.user.is_authenticated and request.user.user_role == 'admin' %} 
-    <div class="text-center mb-3">
-        <a href="{% url 'add_plant' %}" class="btn btn-primary">Add Plant Info</a>
-    </div>
 
-{% endif %} 
 {% if request.user.is_authenticated %} 
     <div class="text-center mb-3">
         <a href="{% url 'display_favorite' %}" class="btn btn-primary">Favorite</a>
@@ -32,7 +27,7 @@
                     </div>
                     <div class="card-body">
                         <p class="card-title"><strong>{{ plant.plant_common_name }} </strong></p>
-                        <p class="card-text">{{ plant.product_description|slice:":25" }}{% if plant.product_description|length > 25 %}...{% endif %}</p>
+                        <p class="card-text">{{ plant.plant_description|slice:":25" }}{% if plant.plant_description|length > 25 %}...{% endif %}</p>
                     </div>
     
                     <div>

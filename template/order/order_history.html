@@ -3,44 +3,44 @@
 {% block content %}
 
 <div class="container">
-  {% if user_orders %}
-    <h1 class="mt-5 mb-4">Your Order History</h1>
-    <div class="list-group">
-      {% for order in user_orders %}
-        <div class="list-group-item mb-4">
-          <h4 class="mb-3">Order Date: {{ order.order_date }}</h4>
-          <p><strong>Total Price:</strong> Rs. {{ order.total_price }}</p>
-          <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
-          <table class="table">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Product Name</th>
-                <th>Quantity</th>
-                <th>Subtotal</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for item in order.orderitem_set.all %}
-                <tr>
-                  <td>
-                    <div class="d-flex align-items-center">
-                      <img src="{{ item.product.product_image.url }}" alt="{{ cart_item.product.product_name }}" class="img-thumbnail mr-2" style="max-height: 50px;">
-                  </div>
-                  </td>
-                  <td>{{ item.product.product_name }}</td>
-                  <td>{{ item.quantity }}</td>
-                  <td>Rs. {{ item.sub_total }}</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+    {% if user_orders %}
+        <h1 class="mt-5 mb-4">Your Order History</h1>
+        <div class="list-group">
+            {% for order in user_orders %}
+                <div class="list-group-item mb-4">
+                    <h4 class="mb-3">Order Date: {{ order.order_date }}</h4>
+                    <p><strong>Total Price:</strong> Rs. {{ order.total_price }}</p>
+                    <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.orderitem_set.all %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="{{ item.product.product_image.url }}" alt="{{ cart_item.product.product_name }}" class="img-thumbnail mr-2" style="max-height: 50px;">
+                                        </div>
+                                    </td>
+                                    <td>{{ item.product.product_name }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>Rs. {{ item.sub_total }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
         </div>
-      {% endfor %}
-    </div>
-  {% else %}
-    <p class="mt-5">No orders found.</p>
-  {% endif %}
+    {% else %}
+        <p class="mt-5">No orders found.</p>
+    {% endif %}
 </div>
 
 {% endblock %}
