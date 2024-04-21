@@ -3,6 +3,8 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from . models import Plant_Info, Plant_Form
 from django.contrib.auth.decorators import user_passes_test
 from users.views import is_admin
+from favorite.models import Favorite
+from products.models import product_form
 
 
 def display_plant_info(request):
@@ -19,7 +21,14 @@ def display_plant_info(request):
     except EmptyPage:
         plant_info = paginator.page(paginator.num_pages)
 
-    context = {'plant_info': plant_info}
+    favorite_plants = []
+    if request.user.is_authenticated:
+        favorite_plants = Favorite.objects.filter(user=request.user).values_list('plant_id', flat=True)
+
+    context = {
+        'plant_info': plant_info, 
+        'favorite_plants': favorite_plants,
+        }
     
     if is_admin(request.user):
         return render(request, 'info/admin_display_plant.html', context)

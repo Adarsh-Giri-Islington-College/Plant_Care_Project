@@ -2,24 +2,39 @@
 
 {% block content %}
 
-<p>Payment</p>
 
-<form action="{% url 'khalti_payment' %}" method="POST">
-    {% csrf_token %}
-    <p> Select Payment Method:
-        <select name="payment_method" id="payment-method-select">
-            {% for method in payment_method_choices %}
-                <option vaue="{{ method.0 }}">{{ method.1 }}</option>
-            {% endfor %}
-        </select>
-    </p>
-    
-    <input type="hidden" name="purchase_order_id" value="1">
-    <input type="hidden" name="amount" value="{{ total_price }}">
-    <input type="hidden" name="return_url" value="http://127.0.0.1:8000/order/verify_payment">
-    <input type="text" value="{{ total_display_price }}" readonly>
-    <input type="submit" class="btn btn-primary" value="Place Order">
-</form>
+<style>
+    .btn {
+        background-color: #32cd32; 
+        border-color: #32cd32; 
+        color: #fff; 
+    }
+</style>
 
+<div class="container mt-5">
+    <div class="card mx-auto" style="max-width: 400px;">
+        <div class="card-header">
+            <h5 class="card-title text-center"><strong>Payment</strong></h5>
+        </div>
+        <div class="card-body">
+            <form action="{% url 'khalti_payment' %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <strong><label for="payment-method-select">Select Payment Method:</label></strong>
+                    <select name="payment_method" id="payment-method-select" class="form-control">
+                        {% for method in payment_method_choices %}
+                            <option value="{{ method.0 }}">{{ method.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <input type="hidden" name="purchase_order_id" value="1">
+                <input type="hidden" name="amount" value="{{ total_price }}">
+                <input type="hidden" name="return_url" value="http://127.0.0.1:8000/order/verify_payment">
+                <p><strong>Total Cost: <input type="text" value="{{ total_display_price }}" class="form-control mb-3" readonly></strong></p>
+                <button type="submit" class="btn">Place Order</button>
+            </form>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

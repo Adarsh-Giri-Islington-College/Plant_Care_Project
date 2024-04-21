@@ -2,36 +2,70 @@
 
 {% block content %}
 
-<div class="container">
-    <h2>Login Here</h2>
+<style>
+    .custom-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
-    <div class="row justify-content-center">    
-            <div class="card-body">
-                    
-                <form method="POST">
+    .custom-card .card-body {
+        background-color: #f8f9fa;
+    }
 
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="text" name="email" class="form-control" required placeholder="Enter your email">
-                    </div>
+    .custom-card .btn-primary {
+        background-color: #28a745; 
+        border-color: #28a745; 
+    }
 
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" name="password" class="form-control" required placeholder="Enter your password">
-                    </div>
-                    {% if error_message %}
-                    <p class="text-danger">{{ error_message }}</p> 
-                    {% endif %}
+    .custom-card .btn-primary:hover {
+        background-color: #218838; 
+        border-color: #1e7e34; 
+    }
 
-                    <br>
-                    <input type="submit" value="Login" class="btn btn-primary">
+    .login-container {
+        width: 350px; 
+        margin: 0 auto; 
+        margin-top: 50px; 
+    }
+    .center-btn {
+        display: flex;
+        justify-content: center;
+    }
+</style>
 
+<div class="container login-container">
+    <h2 class="text-center mb-4">Login Here</h2>
+
+    <div class="card custom-card">
+        <div class="card-body">
+            <form method="POST">
+
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="text" name="email" class="form-control" required placeholder="Enter your email">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" class="form-control" required placeholder="Enter your password">
+                </div>
+                {% if error_message %}
+                <p class="text-danger">{{ error_message }}</p> 
+                {% endif %}
+                <br>
+                <div class="center-btn">
+                    <input type="submit" value="Login" class="btn btn-primary btn-block">
+                </div>
             </form>
 
+            <div class="text-center mt-3">
+                <a href="#" class="text-muted">Forgot Password?</a>
+                <a href="{% url 'register' %}" class="text-muted" style="padding-left: 20px;">Dont have account?</a>
+            </div>
         </div>
     </div>
-
 </div>
 
 {% endblock %}

@@ -33,16 +33,10 @@ def add_favorite(request, pk):
     existing_favorite = Favorite.objects.filter(user=request.user, plant=plant).exists()
     if not existing_favorite:
         Favorite.objects.create(user=request.user, plant=plant)
-        return redirect('display_favorite')
+        return redirect('display_plant_info')
 
-    error_message = 'Already in favorite'
-    context = {
-        'favorite_plant': favorite_plant,
-        'error_message': error_message
-    }            
-    return render(request, 'favorite/favorite.html', context)
+    return redirect('display_plant_info')
     
-
 
 def delete_favorite(request, pk):
     favorite = get_object_or_404(Favorite, favorite_id=pk)

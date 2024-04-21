@@ -1,142 +1,231 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Products</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    <style>
+        body {
+            background-color: #f0fff0; 
+        }
+
+        .product-card {
+            height: 100%;
+            background-color: #f8f9fa; 
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .product-card .card-body {
+            padding: 10px;
+        }
+
+        .product-card p {
+            margin-bottom: 5px;
+        }
+
+        .product-card .price {
+            margin-bottom: 0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .pagination {
+            justify-content: center;
+        }
+
+        .filter-section {
+            background-color: #90ee90; 
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            background-color: #32cd32; 
+            border-color: #32cd32; 
+            color: #fff; 
+        }
+
+        .pagination .page-link {
+            background-color: #32cd32;
+            border-color: #32cd32;
+            color: #fff; 
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #228b22; 
+            border-color: #228b22; 
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+        }
+        a:hover {
+            color: black; 
+        }
+    </style>
 </head>
 
 <body>
     <div class="container">
-        <h2 class="text-center"> Our Products: </h2><hr>
-        <div class="row">
-
-            <div class="col-lg-3">
-                <form method="get" action="{% url 'filter_by_price' %}">
-                    <div style="background-color: white;">
-                        <div class="card-body">
-                            <h5 class="card-title">Price Range</h5>
-                            <div class="form-group">
-                                <label for="min_price">Min</label>
-                                <select name="min_price" id="min_price" class="form-control">
-                                    <option value="0">Rs. 0</option>
-                                    <option value="50">Rs.50</option>
-                                    <option value="100">Rs.100</option>
-                                    <option value="150">Rs.150</option>
-                                    <option value="200">Rs.200</option>
-                                    <option value="500">Rs.500</option>
-                                    <option value="1000">Rs.1000</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="max_price">Max</label>
-                                <select name="max_price" id="max_price" class="form-control">
-                                    <option value="50">Rs.50</option>
-                                    <option value="100">Rs.100</option>
-                                    <option value="150">Rs.150</option>
-                                    <option value="200">Rs.200</option>
-                                    <option value="500">Rs.500</option>
-                                    <option value="1000">Rs.1000</option>
-                                    <option value="2000">Rs.2000</option>
-                                </select>
-                            </div><br>
-                            <button type="submit" class="btn btn-primary btn-block">Apply</button>
+        <div class="row justify-content-between m-4">
+            <!-- Aside (Filter Section) -->
+            <div class="col-lg-3 aside">
+                <div class="filter-section">
+                    <form method="get" action="{% url 'filters' %}">
+                        <h5><strong>Price Range</strong></h5>
+                        <div class="form-group">
+                            <label for="min_price">Min</label>
+                            <select name="min_price" id="min_price" class="form-control">
+                                <option value="0" {% if min_price == '0.00' %}selected{% endif %}>Rs. 0.00</option>
+                                <option value="50" {% if min_price == '50.00' %}selected{% endif %}>Rs. 50.00</option>
+                                <option value="100" {% if min_price == '100.00' %}selected{% endif %}>Rs. 100.00</option>
+                                <option value="150" {% if min_price == '150.00' %}selected{% endif %}>Rs. 150.00</option>
+                                <option value="200" {% if min_price == '200.00' %}selected{% endif %}>Rs. 200.00</option>
+                                <option value="500" {% if min_price == '500.00' %}selected{% endif %}>Rs. 500.00</option>
+                                <option value="1000" {% if min_price == '1000.00' %}selected{% endif %}>Rs. 1000.00</option>
+                            </select>
                         </div>
-                    </div>
-                </form>
+                        <div class="form-group">
+                            <label for="max_price">Max</label>
+                            <select name="max_price" id="max_price" class="form-control">
+                                {% if max_product_price >= 2000 %}
+                                <option value="{{ max_product_price }}" {% if max_price == max_product_price %}selected{% endif %}>Rs.{{ max_product_price }}</option>
+                                {% endif %}
+                                <option value="2000" {% if max_price == '2000.00' %}selected{% endif %}>Rs. 2000.00</option>
+                                <option value="1000" {% if max_price == '1000.00' %}selected{% endif %}>Rs. 1000.00</option>
+                                <option value="500" {% if max_price == '500.00' %}selected{% endif %}>Rs. 500.00</option>
+                                <option value="200" {% if max_price == '200.00' %}selected{% endif %}>Rs. 200.00</option>
+                                <option value="150" {% if max_price == '150.00' %}selected{% endif %}>Rs. 150.00</option>
+                                <option value="100" {% if max_price == '100.00' %}selected{% endif %}>Rs. 100.00</option>
+                                <option value="50" {% if max_price == '50.00' %}selected{% endif %}>Rs. 50.00</option>
+                            </select>
+                        </div><br>
+
+                        <h5><strong>Product For</strong></h5>
+                        {% for choice_value, choice_label in form.product_for.field.choices %}
+                        <div class="form-check">
+                            <input type="checkbox" name="product_for" value="{{ choice_value }}" id="{{ choice_value }}" class="form-check-input" {% if choice_value in selected_product_for %}checked{% endif %}>
+                            <label for="{{ choice_value }}" class="form-check-label">{{ choice_label }}</label>
+                        </div>
+                        {% endfor %}
+                        <br>
+
+                        <h5><strong>Product Categories</strong></h5>
+                        <div class="form-group">
+                            {% for category in categories %}
+                            <div class="form-check">
+                                <input type="checkbox" name="product_category" value="{{ category.category_id }}" id="category_{{ category.category_id }}" class="form-check-input" {% if category.id in selected_category %}checked{% endif %}>
+                                <label for="category_{{ category.category_id }}" class="form-check-label">{{ category.category_name }}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <br>
+
+                        <button type="submit" class="btn">Apply Filters</button>
+                    </form>
+                </div>
             </div>
 
-            {% if products %}
-                {% for product in products %}
-
-                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4">
-
-                        <div style="height: 50vh; background-color: white;">
-                            <a href="{% url 'product_detail' product.pk %}">
-                                <div class="image-container" style="height: 100px; overflow: hidden;">
-                                    <img src="{{ product.product_image.url }}" class="card-img-top" alt="image" style="width: 100%; height: 100%; object-fit: cover;">
+            <!-- Products Section -->
+            <div class="col-lg-8">
+                <div class="row">
+                    {% if products %}
+                        {% for product in products %}
+                            <div class="col-lg-4 col-md-6 col-sm-6 mb-4" style="width: 200px;">
+                                <div class="product-card">
+                                    <a href="{% url 'product_detail' product.pk %}">
+                                        <div class="image-container">
+                                            <img src="{{ product.product_image.url }}" class="card-img-top" alt="image">
+                                        </div>
+                                    
+                                    <div class="card-body">
+                                        <p class="card-title"><strong>{{ product.product_name }} </strong></p>
+                                        <p class="card-text">{{ product.product_description|slice:":20" }}{% if product.product_description|length > 25 %}...{% endif %}</p>
+                                    </div>
+                                    <hr>
+                                    {% if product.product_quantity == 0 %}
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <p class="price"><strong>Rs. {{ product.product_price }}</strong></p>
+                                        <div>
+                                            <p style="color: red;"><strong>Sold Out</strong></p>
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <p class="price"><strong>Rs. {{ product.product_price }}</strong></p>
+                                        <div>
+                                            <a href="{% url 'add_to_cart' product_id=product.pk %}" class="btn btn-sm"><i class="fas fa-cart-plus"></i></a>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    </a>
                                 </div>
-                            </a>
-                            <div class="card-body">
-                                <p class="card-title"><strong>{{ product.product_name }} </strong></p>
-                                <p class="card-text">{{ product.product_description|slice:":25" }}{% if product.product_description|length > 25 %}...{% endif %}</p>
-                                <p class="card-title"><strong>{{ product.product_quantity }} </strong></p>
                             </div>
-
-                            <div>
-                                <hr>
-                                <p style="margin-bottom: 10px; margin-left: 20px;"> <strong>Rs.</strong> {{ product.product_price }}</p>
-                            </div>
-
-                            <div class="d-flex flex-row justify-content-center mb-3">
-                                <div>
-                                    <a href="{% url 'product_detail' product.pk %}" class="btn btn-primary btn-sm "><i class="fas fa-info-circle"></i></a>
-                                    <a href="{% url 'add_to_cart' product_id=product.pk %}" class="btn btn-primary btn-sm"><i class="fas fa-cart-plus"></i></a>
-                                </div>
-                            </div>  
-                        </div>
-                    </div>
-
-                    
-                {% endfor %}
-
-            {% else %}
-
-                <p class="text-center">No Products</p>
-
-            {% endif %}
-
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-center">No Products</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="d-flex justify-content-center">   
+    <div class="d-flex justify-content-center">
         <div class="row m-5">
             <div class="col-md-12 m-2">
-
                 {% if products.has_other_pages %}
-                    <ul class="pagination justify-content-center">
-                    
-                    {% if products.has_previous %}  
-                        <li class="page-item">
-                            <a href="?page={{ products.previous_page_number }}" class="page-link">&laquo;</a>
-                        </li>
-
-                    {% else %}
-                        <li class="page-item disabled">
-                            <a class="page-link" href="?page=1">&laquo;</a>
-                        </li>     
-                    {% endif %}
-
-                    {% for i in products.paginator.page_range %}
-                        {% if products.number == i %}
-                            <li class="page-item active">
-                                <a class="page-link">{{ i }}</a>
+                    <ul class="pagination">
+                        {% if products.has_previous %}
+                            <li class="page-item">
+                                <a href="?page={{ products.previous_page_number }}" class="page-link">&laquo;</a>
                             </li>
                         {% else %}
-                            <li class="page-item">
-                                <a href="?page={{ i }}" class="page-link">{{ i }}</a>
-                            </li>  
+                            <li class="page-item disabled">
+                                <a class="page-link" href="?page=1">&laquo;</a>
+                            </li>
                         {% endif %}
-                    {% endfor %}
-
-
-                    {% if products.has_next %}  
-                        <li class="page-item">
-                            <a href="?page={{ products.next_page_number }}" class="page-link">&raquo;</a>
-                        </li>
-                    {% else %}
-                        <li class="page-item disabled">
-                            <a class="page-link" href="?page={{ products.paginator.num_pages }}">&raquo;</a>
-                        </li>     
-                    {% endif %}
-
+                        {% for i in products.paginator.page_range %}
+                            {% if products.number == i %}
+                                <li class="page-item active">
+                                    <a class="page-link">{{ i }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if products.has_next %}
+                            <li class="page-item">
+                                <a href="?page={{ products.next_page_number }}" class="page-link">&raquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="?page={{ products.paginator.num_pages }}">&raquo;</a>
+                            </li>
+                        {% endif %}
                     </ul>
                 {% endif %}
-
             </div>
         </div>
     </div>

@@ -55,6 +55,10 @@
                         {{ checkbox }}
                     </div>
                 {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.product_category.id_for_label }}">Product Category</label>
+                {{ form.product_category }}
             </div><br>
             <button type="submit" class="btn" style="background-color: #009933; color: white;">Update Product</button>
         </form>    

@@ -69,7 +69,7 @@ def login(request):
             else:
                 auth.login(request, user)
                 request.session.set_expiry(0)  
-                return redirect('admin_dashboard')
+                return redirect('view_users')
         elif user is not None and user.is_banned:
             ban_until = user.ban_until.strftime("%Y-%m-%d %H:%M:%S") if user.ban_until else None
             error_message = 'Sorry you have been banned until ' + ban_until + '.'
@@ -85,12 +85,6 @@ def login(request):
             return render(request, 'users/login.html', context)
     else:
         return render(request, 'users/login.html') 
-
-
-def admin_dashboard(request):
-    user = request.user  
-    context = {'user': user}
-    return render(request, 'users/admin_dashboard.html', context)
 
 
 @login_required

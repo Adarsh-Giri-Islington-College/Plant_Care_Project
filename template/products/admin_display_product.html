@@ -16,6 +16,10 @@
     .header p {
         padding-top: 15px;
     }
+    .header a {
+        background-color: #009933;
+        color: #fff;
+    }
     .header button {
         background-color: #009933;
         color: #fff;
@@ -42,20 +46,13 @@
     }
 
     table tbody tr:nth-child(even) {
-        background-color: #fff; 
+        background-color: #f0f0f0; 
     }
 </style>
 
-<script>
-    function openAddProductPopup() {
-        var popup = window.open("{% url 'add_product' %}", "Add Product Popup", "width=600, height=400");
-        popup.focus(); // Optional: ensure the popup gets focus
-    }
-</script>
-
 <div class="header text-center">
     <p class="mx-auto">Manage Products</p>
-    <button onclick="openAddProductPopup()" class="btn">Add Product</button>
+    <a href="{% url 'add_product' %}" class="btn">Add Product</a>
 </div>
 
 <div class="container">
@@ -82,6 +79,7 @@
                     <th scope="col" class="small">Quantity</th>
                     <th scope="col" class="small">Price</th>
                     <th scope="col" class="small">Plant For</th>
+                    <th scope="col" class="small">Plant Category</th>
                     <th scope="col" class="small">Actions</th>
                 </tr>
             </thead>
@@ -99,6 +97,7 @@
                     <td class="small">{{ product.product_quantity }}</td>
                     <td class="small">{{ product.product_price }}</td>
                     <td class="small">{{ product.product_for }}</td>
+                    <td class="small">{{ product.product_category }}</td>
                     <td class="small">
                         <a href="{% url 'update_product' product.pk %}" class="btn btn-primary btn-sm"><i class="fas fa-edit">Edit</i></a>
                         <a href="{% url 'delete_product' product.pk %}" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a>

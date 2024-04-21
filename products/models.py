@@ -4,6 +4,15 @@ from django import forms
 import json
 from users.models import User
 
+
+class ProductCategory(models.Model):
+    category_id = models.BigAutoField(primary_key=True)
+    category_name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.category_name
+    
+
 class Product(models.Model):
     product_id = models.BigAutoField(primary_key=True)
     product_image = models.ImageField(null=False, blank=False)
@@ -11,11 +20,22 @@ class Product(models.Model):
     product_price = models.DecimalField(max_digits=10, decimal_places=2)
     product_quantity = models.IntegerField(null=False, blank=False)
     product_description = models.TextField()  
-    product_for = models.CharField(max_length=500, null=True, blank=True)  
+    product_for = models.CharField(max_length=500, null=True, blank=True) 
+    product_category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)   
     added_at = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
         return self.product_name
+    
+
+
+class ProductCategoryForm(forms.ModelForm):
+    class Meta:
+        model = ProductCategory
+        fields = ['category_name']
+        widgets = {
+            'category_name': forms.TextInput(attrs={'class': 'form-control'}),
+        }
 
 
 class product_form(forms.ModelForm):
@@ -24,13 +44,14 @@ class product_form(forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = ('product_image', 'product_name', 'product_price', 'product_quantity', 'product_description', 'product_for')
+        fields = ('product_image', 'product_name', 'product_price', 'product_quantity', 'product_description', 'product_for', 'product_category')
         widgets = {
             'product_image': forms.FileInput(attrs={'class': 'form-control'}),
             'product_name': forms.TextInput(attrs={'class': 'form-control'}),
             'product_price': forms.NumberInput(attrs={'class': 'form-control', 'step': 'any'}),
             'product_quantity': forms.TextInput(attrs={'class': 'form-control'}),
-            'product_description': forms.TextInput(attrs={'class': 'form-control'}),
+            'product_description': forms.Textarea(attrs={'class': 'form-control'}),
+            'product_category': forms.Select(attrs={'class': 'form-control'}),
         }
 
         def clean_product_for(self):

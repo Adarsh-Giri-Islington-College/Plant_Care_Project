@@ -1,0 +1,75 @@
+{% extends 'include/admin_navbar.html' %}
+
+{% block content %}
+
+<style>
+    .header {
+        background-color: #0f3d0f;
+        color: #fff;
+        width: 100%;
+        height: 60px;
+        font-size: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .header p {
+        padding-top: 15px;
+    }
+    .header a {
+        background-color: #009933;
+        color: #fff;
+    }
+    .header button {
+        background-color: #009933;
+        color: #fff;
+    }
+    table thead {
+        background-color: #4CAF50; 
+        color: #fff; 
+    }
+    table tbody tr:nth-child(odd) {
+        background-color: #e6ffe6; 
+        color: #fff; 
+    }
+
+    table tbody tr:nth-child(even) {
+        background-color: #f0f0f0; 
+    }
+</style>
+
+<div class="header text-center">
+    <p class="mx-auto">Manage Product Categories</p>
+    <a href="{% url 'add_category' %}" class="btn">Add Category</a>
+</div><br>
+
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col" class="small">Product Category</th>
+                    <th scope="col" class="small">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% if categories %}
+                {% for category in categories %}
+                <tr>
+                    <td class="small">{{ category.category_name }}</td>
+                    <td class="small">
+                        <a href="{% url 'delete_category' category.pk %}" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-center">No Product Catogories</td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

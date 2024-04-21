@@ -96,7 +96,7 @@ def verify_payment(request):
 
     empty_cart_and_deduct_quantity(request.user)
     
-    return render(request, 'order/verify_payment.html')
+    return redirect('display_products')
 
 
 def COD(request):
@@ -118,7 +118,7 @@ def COD(request):
 
     empty_cart_and_deduct_quantity(request.user)
     
-    return render(request, 'order/verify_payment.html')
+    return redirect('display_products')
 
 
 def order_history(request):
