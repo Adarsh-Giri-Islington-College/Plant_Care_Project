@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Max
 from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from . models import ProductCategory, ProductCategoryForm, Product, product_form, Review, ReviewForm
 from django.db.models import Avg
+from cart.models import Cart, CartItem
 from users.views import is_admin
 
 
@@ -23,7 +24,7 @@ def display_products(request):
 
     form = product_form()
     max_product_price = Product.objects.aggregate(Max('product_price'))['product_price__max']
-    categories = ProductCategory.objects.all().distinct()
+    categories = ProductCategory.objects.all().distinct()       
 
     context = {
         'products': products,
@@ -168,8 +169,16 @@ def search(request):
         
         if query:
             products = Product.objects.filter(product_name__icontains=query) | Product.objects.filter(product_id__icontains=query)
+            form = product_form()
+            max_product_price = Product.objects.aggregate(Max('product_price'))['product_price__max']
+            categories = ProductCategory.objects.all().distinct()       
 
-            context = {'products': products}
+            context = {
+                    'products': products,
+                    'form': form,
+                    'max_product_price': max_product_price,
+                    'categories': categories,
+                }
             
             if is_admin(request.user):
                 return render(request, 'products/admin_display_product.html', context)

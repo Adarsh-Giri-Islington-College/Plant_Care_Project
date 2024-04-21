@@ -70,9 +70,8 @@
             <thead class="thead-dark">
                 <tr>
                     <th class="small">Image</th>
-                    <th class="small">Common Name</th>
+                    <th class="small">Plant Name</th>
                     <th class="small">Description</th>
-                    <th class="small">Disease Name</th>
                     <th class="small">Cause</th>
                     <th class="small">Solution</th>
                     <th class="small">Actions</th>
@@ -85,9 +84,8 @@
                             <td >
                                 <img src="{{ plant.plant_image.url }}" class="img-thumbnail" alt="Plant Image" style="max-width: 70px;">
                             </td>
-                            <td class="small">{{ plant.plant_common_name }}</td>
+                            <td class="small">{{ plant.plant_name }}</td>
                             <td class="small">{{ plant.plant_description|slice:":25" }}{% if plant.plant_description|length > 25 %}...{% endif %}</td>
-                            <td class="small">{{ plant.disease_name }}</td>
                             <td class="small">{{ plant.cause }}</td>
                             <td class="small">{{ plant.solution }}</td>
                             <td class="small">

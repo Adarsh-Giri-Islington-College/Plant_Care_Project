@@ -1,9 +1,19 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.sites.shortcuts import get_current_site
 from .models import User, edit_profile_form
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils import timezone
-from django.core.mail import send_mail
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib import messages
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import EmailMessage
+from django.utils.encoding import force_bytes
+from order.models import Order, OrderItem
+from django.db.models import Sum
+from datetime import datetime
 
 
 def is_admin(user):
@@ -43,7 +53,22 @@ def register(request):
             else:
                 user = User.objects.create_user(user_image=user_image, username=username, email=email, first_name=first_name, last_name=last_name, address=address, password=password1)
                 user.save()
-                return redirect('login')
+
+                current_site = get_current_site(request) 
+                domain = current_site.domain
+                mail_subject = 'Please Activate Your Account'
+                message = render_to_string('users/account_verification_email.html', {
+
+                    'user': user,
+                    'domain': domain, 
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': default_token_generator.make_token(user),
+                })
+                
+                to_email = email
+                send_email = EmailMessage(mail_subject, message, to=[to_email])
+                send_email.send()
+                return redirect('/users/login/?command=verification&email='+email)
         else:
             error_message = 'Passwords did not match!'
             context = {
@@ -53,6 +78,24 @@ def register(request):
     else:
         return render(request, 'users/register.html')
 
+
+def activate(request, uidb64, token):
+
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode() 
+        user = User._default_manager.get(pk = uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user= None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        messages.success(request, "Congrulations! your account is activated..")
+        return redirect('login')
+    else:
+        messages.error(request, 'Invalid activate link')
+        return redirect(register)
+    
 
 def login(request):
     if request.method == 'POST':
@@ -69,7 +112,7 @@ def login(request):
             else:
                 auth.login(request, user)
                 request.session.set_expiry(0)  
-                return redirect('view_users')
+                return redirect('admin_dashboard')
         elif user is not None and user.is_banned:
             ban_until = user.ban_until.strftime("%Y-%m-%d %H:%M:%S") if user.ban_until else None
             error_message = 'Sorry you have been banned until ' + ban_until + '.'
@@ -85,6 +128,34 @@ def login(request):
             return render(request, 'users/login.html', context)
     else:
         return render(request, 'users/login.html') 
+
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.save()
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('view_profile')  
+        else:
+            form = PasswordChangeForm(request.user)
+            error = "Unable to change password. New password should be as mention below."
+            context = {
+                'form': form,
+                'error': error
+            }
+            if is_admin(request.user):
+                return render(request, 'users/admin_change_password.html', {'form': form})
+            else:
+                return render(request, 'users/change_password.html', context)
+    else:
+        form = PasswordChangeForm(request.user)
+
+    if is_admin(request.user):
+        return render(request, 'users/admin_change_password.html', {'form': form})
+    else:
+        return render(request, 'users/change_password.html', {'form': form})
 
 
 @login_required
@@ -198,3 +269,36 @@ def user_search(request):
             return redirect('view_users')  
     else:
         return redirect('view_users')
+    
+
+def admin_dashboard(request):
+    months = [
+        (1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'),
+        (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'),
+        (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')
+    ]
+
+    current_year = datetime.now().year
+    years = [(year, year) for year in range(current_year - 5, current_year + 1)]
+    selected_month = request.POST.get('selected_month')
+    selected_year = request.POST.get('selected_year')
+
+    if request.method == 'POST':
+        if selected_month and selected_year:
+            orders = Order.objects.filter(order_date__month=selected_month, order_date__year=selected_year)
+        elif selected_year:
+            orders = Order.objects.filter(order_date__year=selected_year)
+        else:
+            orders = Order.objects.filter(order_date__month=selected_month)
+            
+        total_sales = orders.aggregate(total_sales=Sum('total_price'))['total_sales'] or 0
+        context = {
+            'total_sales': total_sales, 
+            'months': months, 
+            'years': years, 
+            'selected_month': selected_month, 
+            'selected_year': selected_year
+        }
+        return render(request, 'users/admin_dashboard.html', context)
+    
+    return render(request, 'users/admin_dashboard.html', {'months': months, 'years': years})

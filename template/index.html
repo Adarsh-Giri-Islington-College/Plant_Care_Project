@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 
 {% block content %}
@@ -14,29 +15,84 @@
             height: 256px; 
             object-fit: cover; 
         }
+        .flex-container {
+            display: flex;
+        }
+
+        .form-container,
+        .result-container {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-right: 10px; /* Adjust as needed */
+        }
+
+        .result-container {
+            margin-right: 0;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px; 
+        }
+
+        .submit-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .name-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 100%;
+        }
     </style>
 </head>
 
 <body>
 
     <div class="container">
-        <h2 class="text-center"> Plant Disease Prediction</h2><hr>
+        <h2 class="text-center">Plant Disease Prediction</h2>
+        <hr>
     
-        <div class="row justify-content-center"> 
-    
-            <form method="post" enctype="multipart/form-data" action="predictImage">
-                {% csrf_token %}
-                <div><label>Upload Image File Here:</label></div> 
-                
-                <img id="uploadedImage" src="{% if filePathName %}{{ filePathName }}{% else %} ./static\images\placeholder\placeholder_img.png {% endif %}" alt="image" ><br>
-                <h2>Result: {{predictedLabel}}</h2>
-                <h5><label><strong> Confidence: </strong></label>  {{  confidence  }}<br><br></h5>
-                
-                <input name="filePath" type="file" onchange="previewImage(event)"><br><br>
-                <input type="submit" value="Submit" class="btn btn-primary btn-sm m-1">
-            </form>
-
+        <div class="flex-container">
+            <div class="form-container">
+                <form method="post" enctype="multipart/form-data" action="predictImage">
+                    {% csrf_token %}
+                    <div><label>Upload Image File Here:</label></div> 
+                    <div class="image-container">
+                        <img id="uploadedImage" src="{% if filePathName %}{{ filePathName }}{% else %} ./static\images\placeholder\placeholder_img.png {% endif %}" alt="image">
+                    </div><br>
+                    <div class="name-container">
+                        <input name="filePath" type="file" onchange="previewImage(event)"><br><br>
+                    </div>
+                    <div class="submit-container">
+                        <input type="submit" value="Submit" class="btn btn-primary btn-sm m-1">
+                    </div>
+                </form>
+            </div>
+            
+            <div class="result-container">
+                {% if processing %}
+                    <p><strong>Result:</strong> {{label}}</p>
+                    <p><strong>Description:</strong> {{description}}</p>
+                    <p><strong>Cause:</strong> {{cause}}</p>
+                    <p><strong>Solution:</strong> {{label}}</p>
+                    <p><strong>Confidence:</strong> {{confidence}}%<p>
+                {% else %}
+                    <p>Result Here...</p>
+                {% endif %}
+            </div>
         </div>
+    </div>
 
         {% if recommended_products %}
         <div class="row justify-content-among m-4">

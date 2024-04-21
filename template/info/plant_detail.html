@@ -57,11 +57,9 @@
         <div class="col-md-6"><br>
             <div class="card">
                 <div class="card-body">
-                    <h2>{{ eachPlant.plant_common_name }}</h2>
-                    <p><strong>Scientific Name:</strong> {{ eachPlant.plant_scientific_name }}</p>
+                    <h2>{{ eachPlant.plant_name }}</h2>
                     <p><strong>Is Affected:</strong> {% if eachPlant.is_affected %}Yes{% else %}No{% endif %}</p>
                     {% if eachPlant.is_affected %}
-                        <p><strong>Disease Name:</strong> {{ eachPlant.disease_name }}</p>
                         <p><strong>Cause:</strong> {{ eachPlant.cause }}</p>
                         <p><strong>Solution:</strong> {{ eachPlant.solution }}</p>
                     {% endif %}

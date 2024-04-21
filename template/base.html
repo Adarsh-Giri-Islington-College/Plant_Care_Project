@@ -110,7 +110,7 @@
             .header ul li {
                 display: block;
                 margin: 50px 0;
-                line-height: 30px;
+                line-height: 10px;
             }
             .header ul li a {
                 font-size: 20px;
@@ -154,6 +154,11 @@
             </form>
         </li>
         {% if user.is_authenticated %}
+        <li>
+            <a href="{% url 'prediction_history' %}">
+                <i class="fas fa-history" style="font-size: 20px;"></i>
+            </a>
+        </li>
         <li>
             <a href="{% url 'display_favorite' %}">
                 <i class="fas fa-heart" style="font-size: 20px;"></i>

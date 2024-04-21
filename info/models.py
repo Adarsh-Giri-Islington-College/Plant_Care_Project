@@ -6,30 +6,26 @@ import json
 class Plant_Info(models.Model):
     plant_id = models.BigAutoField(primary_key=True)
     plant_image = models.ImageField(null=False, blank=False)
-    plant_common_name = models.CharField(max_length=50)
-    plant_scientific_name = models.CharField(max_length=50)
+    plant_name = models.CharField(max_length=50)
     is_affected = models.BooleanField(default=False)
-    disease_name = models.CharField(max_length=50)
     plant_description = models.TextField()  
-    cause = models.CharField(max_length=50)
-    solution = models.CharField(max_length=50)
+    cause = models.TextField(max_length=50)
+    solution = models.TextField(max_length=50)
 
     def __str__(self):
-        return self.plant_common_name
+        return self.plant_name
     
 
 class Plant_Form(forms.ModelForm):
-       
+    plant_for_choices = [(value[0], value[0]) for value in json.load(open('./models/class_names.json')).values() if isinstance(value, list) and len(value) > 0]
+    plant_name = forms.ChoiceField(choices=plant_for_choices, required=False, widget=forms.Select(attrs={'class': 'form-control'}))
     class Meta:
         model = Plant_Info
-        fields = ('plant_image', 'plant_common_name', 'plant_scientific_name', 'is_affected', 'disease_name', 'plant_description', 'cause', 'solution')
+        fields = ('plant_image', 'plant_name', 'is_affected', 'plant_description', 'cause', 'solution')
         widgets = {
             'plant_image': forms.FileInput(attrs={'class': 'form-control'}),
-            'plant_common_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'plant_scientific_name': forms.TextInput(attrs={'class': 'form-control'}),
             'is_affected': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'disease_name': forms.TextInput(attrs={'class': 'form-control'}),
             'plant_description': forms.Textarea(attrs={'class': 'form-control'}),
-            'cause': forms.TextInput(attrs={'class': 'form-control'}),
-            'solution': forms.TextInput(attrs={'class': 'form-control'}),
+            'cause': forms.Textarea(attrs={'class': 'form-control'}),
+            'solution': forms.Textarea(attrs={'class': 'form-control'}),
         }

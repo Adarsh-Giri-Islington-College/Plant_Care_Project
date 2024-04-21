@@ -5,6 +5,7 @@ from users import views
 urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', views.login, name='login'),
+    path('change_password/', views.change_password, name='change_password'),
     path('logout/', views.logout, name='logout'),
     path('profile/', views.view_profile, name='view_profile'),
     path('edit_profile/', views.edit_profile, name='edit_profile'),
@@ -14,4 +15,6 @@ urlpatterns = [
     path('ban_user/<int:user_id>', views.ban_user, name='ban_user'),
     path('unban_user/<int:user_id>', views.unban_user, name='unban_user'),
     path('user_search/', views.user_search, name='user_search'),
+    path('activate/<uidb64>/<token>/', views.activate, name='activate'),
+    path('admin_dashboard/', views.admin_dashboard, name='admin_dashboard'),
 ]

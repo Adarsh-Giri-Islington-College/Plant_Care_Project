@@ -1,0 +1,57 @@
+{% extends 'include/admin_navbar.html' %}
+
+{% block content %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    
+<style>
+    .header {
+        background-color: #0f3d0f;
+        color: #fff;
+        width: 100%;
+        height: 60px;
+        font-size: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .header p {
+        padding-top: 15px;
+    }
+</style>
+</head>
+<body>
+    
+    <div class="header text-center">
+        <p class="mx-auto">Admin Dashboard</p>
+    </div><br>
+    
+    <h1>Total Sales</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <select name="selected_month">
+            <option value="">Select Month</option>
+            {% for month_num, month_name in months %}
+                <option value="{{ month_num }}" {% if selected_month == month_num %} selected {% endif %}>{{ month_name }}</option>
+            {% endfor %}
+        </select>
+        <select name="selected_year">
+            <option value="">Select Year</option>
+            {% for year_value, year_label in years %}
+                <option value="{{ year_value }}" {% if selected_year == year_value %} selected {% endif %}>{{ year_label }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Show</button>
+    </form>
+    {% if total_sales %}
+        <p>Total Sales for the selected month: ${{ total_sales }}</p>
+    {% endif %}
+</body>
+</html>
+
+{% endblock %}

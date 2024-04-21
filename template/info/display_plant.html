@@ -101,13 +101,12 @@
                     <img src="{{ plant.plant_image.url }}" class="card-img-top" alt="image" style="object-fit: cover;">
                 </div>
                 <div class="card-body">
-                    <p class="card-title"><strong>{{ plant.plant_common_name }} </strong></p>
+                    <p class="card-title"><strong>{{ plant.plant_name }} </strong></p>
                     <p class="card-text">{{ plant.plant_description|slice:":25" }}{% if plant.plant_description|length > 25 %}...{% endif %}</p>
                 </div>
 
                 <div>
                     <hr>
-                    <p style="margin-bottom: 10px; margin-left: 20px;">Disease Name: {{ plant.disease_name }}</p>
                     <p style="margin-bottom: 10px; margin-left: 20px;">Cause: {{ plant.cause }}</p>
                     <p style="margin-bottom: 10px; margin-left: 20px;">Solution: {{ plant.solution }}</p>
                 </div>

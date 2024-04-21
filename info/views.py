@@ -4,7 +4,6 @@ from . models import Plant_Info, Plant_Form
 from django.contrib.auth.decorators import user_passes_test
 from users.views import is_admin
 from favorite.models import Favorite
-from products.models import product_form
 
 
 def display_plant_info(request):
