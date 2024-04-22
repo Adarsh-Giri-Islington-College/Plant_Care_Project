@@ -2,181 +2,99 @@
 
 {% block content %}
 
-<style>
-    body {
-        background-color: #f0fff0; 
-    }
+{% load static %}
 
-        .product-card {
-            height: 100%;
-            background-color: #f8f9fa; 
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
 
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
-        }
+<!DOCTYPE html>
+<html lang="en">
 
-        .product-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 5px;
-        }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorite</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/display_product.css' %}">
+</head>
 
-        .product-card .card-body {
-            padding: 10px;
-        }
+<body>
+    <div class="container">
+        <div class="col-lg-8"><br>
+            <div class="row">
+                {% if favorite_plant %}
+                    {% for favorite in favorite_plant %}
+                        <div class="col-lg-4 col-md-6 col-sm-6 mb-4" style="width: 200px;">
+                            <div class="product-card">
+                                <a href="{% url 'plant_detail' favorite.plant.pk %}">
+                                    <div class="image-container">
+                                        <img src="{{ favorite.plant.plant_image.url }}" class="card-img-top" alt="image">
+                                    </div>
+                                
+                                    <div class="card-body">
+                                        <p class="card-title"><strong>{{ favorite.plant.plant_name }} </strong></p>
+                                        <p class="card-text">{{ favorite.plant.plant_description|slice:":40" }}{% if favorite.plant.plant_description|length > 40 %}...{% endif %}</p>
+                                    </div>
+                                    <hr>
 
-        .product-card p {
-            margin-bottom: 5px;
-        }
-
-        .product-card .price {
-            margin-bottom: 0;
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .pagination {
-            justify-content: center;
-        }
-
-        .filter-section {
-            background-color: #90ee90; 
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn {
-            background-color: #32cd32; 
-            border-color: #32cd32; 
-            color: #fff; 
-        }
-
-        .btns {
-            background-color: red; 
-            border-color: red; 
-        }
-
-        .pagination .page-link {
-            background-color: #32cd32;
-            border-color: #32cd32;
-            color: #fff; 
-        }
-
-        .pagination .page-item.active .page-link {
-            background-color: #228b22; 
-            border-color: #228b22; 
-        }
-
-        a {
-            text-decoration: none;
-            color: black;
-        }
-        a:hover {
-            color: black; 
-        }
-</style>
-
-<div class="container">
-    <div class="row justify-content-between m-4">
-
-        {% if favorite_plant %}
-
-        {% for favorite in favorite_plant %}
-    
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-    
-                <div class="card p-2 product-card">
-                    <a href="{% url 'plant_detail' favorite.plant.pk %}">
-                    <div class="image-container">
-                        <img src="{{ favorite.plant.plant_image.url }}" class="card-img-top" alt="image" style="object-fit: cover;">
-                    </div>
-                    <div class="card-body">
-                        <p class="card-title"><strong>{{ favorite.plant.plant_common_name }} </strong></p>
-                        <p class="card-text">{{ favorite.plant.plant_description|slice:":25" }}{% if favorite.plant.plant_description|length > 25 %}...{% endif %}</p>
-                    </div>
-    
-                    <div>
-                        <hr>
-                        <p style="margin-bottom: 10px; margin-left: 20px;">Disease Name: {{ favorite.plant.disease_name }}</p>
-                        <p style="margin-bottom: 10px; margin-left: 20px;">Cause: {{ favorite.plant.cause }}</p>
-                        <p style="margin-bottom: 10px; margin-left: 20px;">Solution: {{ favorite.plant.solution }}</p>
-                    </div>
-
-                <div class="d-flex flex-row justify-content-center mb-3">
-                    <div>
-                        <a href="{% url 'delete_favorite' favorite.pk %}" class="btn btns">Remove</i></a>
-                    </div>
-                </div> 
-                </a> 
+                                    <div class="d-flex justify-content-center mb-3">
+                                        <div>
+                                            <a href="{% url 'delete_favorite' favorite.pk %}" class="btn btns">Remove</i></a>
+                                        </div>
+                                    </div>                                    
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-center">No Favorite Plant Info...</p>
+                {% endif %}
             </div>
         </div>
-
-        
-    {% endfor %}
-
-{% else %}
-
-    <p class="text-center">No Favorite Plants</p>
-
-{% endif %}
-
     </div>
-</div>
 
-<div class="d-flex justify-content-center">   
-    <div class="row m-5">
-        <div class="col-md-12 m-2">
+    <div class="d-flex justify-content-center">   
+        <div class="row m-5">
+            <div class="col-md-12 m-2">
 
-            {% if favorite_plant.has_other_pages %}
-                <ul class="pagination justify-content-center">
-                
-                {% if favorite_plant.has_previous %}  
-                    <li class="page-item">
-                        <a href="?page={{ favorite_plant.previous_page_number }}" class="page-link">&laquo;</a>
-                    </li>
+                {% if favorite_plant.has_other_pages %}
+                    <ul class="pagination justify-content-center">
+                    
+                    {% if favorite_plant.has_previous %}  
+                        <li class="page-item">
+                            <a href="?page={{ favorite_plant.previous_page_number }}" class="page-link">&laquo;</a>
+                        </li>
 
-                {% else %}
-                    <li class="page-item disabled">
-                        <a class="page-link" href="?page=1">&laquo;</a>
-                    </li>     
-                {% endif %}
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="?page=1">&laquo;</a>
+                        </li>     
+                    {% endif %}
 
-                {% for i in favorite_plant.paginator.page_range %}
-                    {% if favorite_plant.number == i %}
-                        <li class="page-item active">
-                            <a class="page-link">{{ i }}</a>
+                    {% for i in favorite_plant.paginator.page_range %}
+                        {% if favorite_plant.number == i %}
+                            <li class="page-item active">
+                                <a class="page-link">{{ i }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                            </li>  
+                        {% endif %}
+                    {% endfor %}
+
+
+                    {% if favorite_plant.has_next %}  
+                        <li class="page-item">
+                            <a href="?page={{ favorite_plant.next_page_number }}" class="page-link">&raquo;</a>
                         </li>
                     {% else %}
-                        <li class="page-item">
-                            <a href="?page={{ i }}" class="page-link">{{ i }}</a>
-                        </li>  
+                        <li class="page-item disabled">
+                            <a class="page-link" href="?page={{ favorite_plant.paginator.num_pages }}">&raquo;</a>
+                        </li>     
                     {% endif %}
-                {% endfor %}
 
-
-                {% if favorite_plant.has_next %}  
-                    <li class="page-item">
-                        <a href="?page={{ favorite_plant.next_page_number }}" class="page-link">&raquo;</a>
-                    </li>
-                {% else %}
-                    <li class="page-item disabled">
-                        <a class="page-link" href="?page={{ favorite_plant.paginator.num_pages }}">&raquo;</a>
-                    </li>     
+                    </ul>
                 {% endif %}
-
-                </ul>
-            {% endif %}
-
         </div>
-      </div>
-  </div>
+    </div>
+</div>
         
 {% endblock %}

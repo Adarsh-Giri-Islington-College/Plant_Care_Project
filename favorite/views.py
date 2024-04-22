@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from . models import Favorite
 from info.models import Plant_Info
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required
 
 
+from django.contrib.auth.decorators import login_required
 def display_favorite(request):
     if request.user.is_authenticated:
         favorite_plant = Favorite.objects.filter(user=request.user)
@@ -26,6 +28,7 @@ def display_favorite(request):
         return redirect('login')
 
 
+@login_required
 def add_favorite(request, pk):
     plant = get_object_or_404(Plant_Info, pk=pk)
     

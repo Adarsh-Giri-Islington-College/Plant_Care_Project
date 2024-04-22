@@ -2,58 +2,68 @@
 
 {% block content %}
 
-<style>
-    .header {
-        background-color: #0f3d0f;
-        color: #fff;
-        width: 100%;
-        height: 60px;
-        font-size: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .header p {
-        padding-top: 15px;
-    }
 
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Plant Info</title>
+    <style>
+        .header {
+            background-color: #0f3d0f;
+            color: #fff;
+            width: 100%;
+            height: 60px;
+            font-size: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header p {
+            padding-top: 15px;
+        }
+    </style>
+</head>
 
-<div class="header text-center">
-    <p class="mx-auto"> Update Plant Information</p>
-</div>
+<body>
+    <div class="header text-center">
+        <p class="mx-auto"> Update Plant Information</p>
+    </div>
 
-<div class="container">
-    <h2 class="my-4">Add Plant Information</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="plant_image">Plant Image:</label>
-            {{ form.plant_image }}
-        </div>
-        <div class="form-group">
-            <label for="plant_name">Plant Name:</label><br>
-            {{ form.plant_name }}
-        </div>
-        <div class="form-group form-check">
-            <label class="form-check-label" for="is_affected">Is Affected</label>
-            {{ form.is_affected }}
-        </div>
-        <div class="form-group">
-            <label for="product_description">Product Description:</label>
-            {{ form.plant_description }}
-        </div>
-        <div class="form-group">
-            <label for="cause">Cause:</label>
-            {{ form.cause }}
-        </div>
-        <div class="form-group">
-            <label for="solution">Solution:</label>
-            {{ form.solution }}
-        </div><br>
-        <button type="submit" class="btn" style="background-color: #009933; color: white;">Update Plant Info</button>
-    </form>
-</div><br>
+    <div class="container">
+        <h2 class="my-4">Add Plant Information</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="plant_image">Plant Image:</label>
+                {{ form.plant_image }}
+            </div>
+            <div class="form-group">
+                <label for="plant_name">Plant Name:</label><br>
+                {{ form.plant_name }}
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label" for="is_affected">Is Affected</label>
+                {{ form.is_affected }}
+            </div>
+            <div class="form-group">
+                <label for="product_description">Product Description:</label>
+                {{ form.plant_description }}
+            </div>
+            <div class="form-group">
+                <label for="cause">Cause:</label>
+                {{ form.cause }}
+            </div>
+            <div class="form-group">
+                <label for="solution">Solution:</label>
+                {{ form.solution }}
+            </div><br>
+            <button type="submit" class="btn" style="background-color: #009933; color: white;">Update Plant Info</button>
+        </form>
+    </div><br>
+</body>
+</html>
 
 
 {% endblock %}

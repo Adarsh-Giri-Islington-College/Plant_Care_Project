@@ -1,0 +1,13 @@
+.pagination {
+    justify-content: center;
+}
+.pagination .page-link {
+    background-color: #32cd32;
+    border-color: #32cd32;
+    color: #fff; 
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #228b22; 
+    border-color: #228b22; 
+}

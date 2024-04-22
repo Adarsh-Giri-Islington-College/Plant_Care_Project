@@ -11,9 +11,12 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from django.utils.encoding import force_bytes
-from order.models import Order, OrderItem
+from order.models import Order, OrderItem, Payment
+from products.models import Product
 from django.db.models import Sum
 from datetime import datetime
+from django.db.models import Count
+import json
 
 
 def is_admin(user):
@@ -51,8 +54,7 @@ def register(request):
                 }                
                 return render(request, 'users/register.html', context)
             else:
-                user = User.objects.create_user(user_image=user_image, username=username, email=email, first_name=first_name, last_name=last_name, address=address, password=password1)
-                user.save()
+                user = User.objects.create_user(user_image=user_image, username=username, email=email, first_name=first_name, last_name=last_name, address=address, password=password1, is_active=False)
 
                 current_site = get_current_site(request) 
                 domain = current_site.domain
@@ -104,7 +106,7 @@ def login(request):
 
         user = auth.authenticate(email=email, password=password)
 
-        if user is not None and is_not_banned(user):
+        if user is not None and is_not_banned(user) and user.is_active:
             if user.user_role == 'user':
                 auth.login(request, user)
                 print('Login Successful!')
@@ -283,22 +285,59 @@ def admin_dashboard(request):
     selected_month = request.POST.get('selected_month')
     selected_year = request.POST.get('selected_year')
 
-    if request.method == 'POST':
-        if selected_month and selected_year:
-            orders = Order.objects.filter(order_date__month=selected_month, order_date__year=selected_year)
-        elif selected_year:
-            orders = Order.objects.filter(order_date__year=selected_year)
-        else:
-            orders = Order.objects.filter(order_date__month=selected_month)
-            
-        total_sales = orders.aggregate(total_sales=Sum('total_price'))['total_sales'] or 0
-        context = {
-            'total_sales': total_sales, 
-            'months': months, 
-            'years': years, 
-            'selected_month': selected_month, 
-            'selected_year': selected_year
-        }
-        return render(request, 'users/admin_dashboard.html', context)
+    payment_methods = list(Payment.objects.values('payment_method').annotate(count=Count('payment_method')))
+    payment_methods_json = json.dumps(payment_methods)
     
-    return render(request, 'users/admin_dashboard.html', {'months': months, 'years': years})
+    orders = Order.objects.all()
+    overall_expected_sales = orders.aggregate(total_sales=Sum('total_price'))['total_sales'] or 0
+    overall_sales = Order.objects.filter(payment__payment_status='Done').aggregate(total_sales=Sum('total_price'))['total_sales'] or 0
+
+    products = Product.objects.all()
+    product_sales_data = []
+    for product in products:
+        order_items = OrderItem.objects.filter(product=product)
+        order_items = order_items.filter(order__payment__payment_status='Done')
+        total_sales = sum(item.quantity for item in order_items)
+        product_sales_data.append({'product_name': product.product_name, 'sales': total_sales})
+
+    product_sales_json = json.dumps(product_sales_data)
+
+    if request.method == 'POST':
+        try:
+            if selected_month and selected_year:
+                orders = Order.objects.filter(order_date__month=selected_month, order_date__year=selected_year, payment__payment_status='Done')
+                e_orders = Order.objects.filter(order_date__month=selected_month, order_date__year=selected_year)
+            elif selected_year:
+                orders = Order.objects.filter(order_date__year=selected_year, payment__payment_status='Done')
+                e_orders = Order.objects.filter(order_date__year=selected_year)
+            else:
+                orders = Order.objects.filter(order_date__month=selected_month, payment__payment_status='Done')
+                e_orders = Order.objects.filter(order_date__month=selected_month)
+
+            total_sales = orders.aggregate(total_sales=Sum('total_price'))['total_sales'] or 0
+            total_e_sales = e_orders.aggregate(total_sales=Sum('total_price'))['total_sales'] or 0
+            context = {
+                'total_sales': total_sales, 
+                'total_e_sales': total_e_sales,
+                'months': months, 
+                'years': years, 
+                'selected_month': selected_month, 
+                'selected_year': selected_year,
+                'payment_methods': payment_methods_json,
+                'overall_expected_sales': overall_expected_sales,
+                'overall_sales': overall_sales,
+                'product_sales': product_sales_json
+            }
+            return render(request, 'users/admin_dashboard.html', context)
+        except Exception as e:
+            return redirect(admin_dashboard)
+        
+    context = {
+        'months': months, 
+        'years': years, 
+        'payment_methods': payment_methods_json,
+        'overall_expected_sales': overall_expected_sales,
+        'overall_sales': overall_sales,
+        'product_sales': product_sales_json
+    } 
+    return render(request, 'users/admin_dashboard.html', context)

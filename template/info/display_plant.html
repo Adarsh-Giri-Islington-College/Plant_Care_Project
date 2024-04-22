@@ -2,184 +2,96 @@
 
 {% block content %}
 
+{% load static %}
 
-<style>
-    body {
-        background-color: #f0fff0; 
-    }
-    .container {
-        margin-top: 20px;
-    }
 
-        .product-card {
-            height: 100%;
-            background-color: #f8f9fa; 
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
+<!DOCTYPE html>
+<html lang="en">
 
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
-        }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Info Hub</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/display_product.css' %}">
+</head>
 
-        .product-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 5px;
-        }
+<body>
+    <div class="container">
+        <div class="col-lg-8"><br>
+            <div class="row">
+                {% if plant_info %}
+                    {% for plant in plant_info %}
+                        <div class="col-lg-4 col-md-6 col-sm-6 mb-4" style="width: 200px;">
+                            <div class="product-card">
+                                <a href="{% url 'plant_detail' plant.pk %}">
+                                    <div class="image-container">
+                                        <img src="{{ plant.plant_image.url }}" class="card-img-top" alt="image">
+                                    </div>
+                                
+                                    <div class="card-body">
+                                        <p class="card-title"><strong>{{ plant.plant_name }} </strong></p>
+                                        <p class="card-text">{{ plant.plant_description|slice:":40" }}{% if plant.plant_description|length > 40 %}...{% endif %}</p>
+                                    </div>
+                                    <hr>
 
-        .product-card .card-body {
-            padding: 10px;
-        }
-
-        .product-card p {
-            margin-bottom: 5px;
-        }
-
-        .product-card .price {
-            margin-bottom: 0;
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .pagination {
-            justify-content: center;
-        }
-
-        .filter-section {
-            background-color: #90ee90; 
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn {
-            background-color: #32cd32; 
-            border-color: #32cd32; 
-            color: #fff; 
-        }
-
-        .btns {
-            background-color: red; 
-            border-color: red; 
-        }
-
-        .pagination .page-link {
-            background-color: #32cd32;
-            border-color: #32cd32;
-            color: #fff; 
-        }
-
-        .pagination .page-item.active .page-link {
-            background-color: #228b22; 
-            border-color: #228b22; 
-        }
-
-        a {
-            text-decoration: none;
-            color: black;
-        }
-        a:hover {
-            color: black; 
-        }
-</style>
-<div class="container">
-
-        
-        {% if plant_info %}
-
-        {% for plant in plant_info %}
-
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card p-2 product-card">
-                <a href="{% url 'plant_detail' plant.pk %}">
-                <div class="image-container">
-                    <img src="{{ plant.plant_image.url }}" class="card-img-top" alt="image" style="object-fit: cover;">
-                </div>
-                <div class="card-body">
-                    <p class="card-title"><strong>{{ plant.plant_name }} </strong></p>
-                    <p class="card-text">{{ plant.plant_description|slice:":25" }}{% if plant.plant_description|length > 25 %}...{% endif %}</p>
-                </div>
-
-                <div>
-                    <hr>
-                    <p style="margin-bottom: 10px; margin-left: 20px;">Cause: {{ plant.cause }}</p>
-                    <p style="margin-bottom: 10px; margin-left: 20px;">Solution: {{ plant.solution }}</p>
-                </div>
-
-                <div class="d-flex justify-content-center mb-3">
-                    <div>
-                        <a href="{% url 'add_favorite' plant.pk %}" class="btn btn-sm {% if plant.pk in favorite_plants %}btns{% else %}btn{% endif %}" id="favoriteBtn{{ plant.pk }}"><i class="far fa-heart"></i></a>
-
-                    </div>
-                </div>
-                </a>
+                                    <div class="d-flex justify-content-center mb-3">
+                                        <div>
+                                            <a href="{% url 'add_favorite' plant.pk %}" class="btn btn-sm {% if plant.pk in favorite_plants %}btns{% else %}btn{% endif %}" id="favoriteBtn{{ plant.pk }}"><i class="far fa-heart"></i></a>
+                                        </div>
+                                    </div>                                    
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-center">No Plant Info...</p>
+                {% endif %}
             </div>
         </div>
-        {% if error_message %}
-        <p class="text-danger">{{ error_message }}</p>
-        {% endif %}
-
-        {% endfor %}
-
-        {% else %}
-
-        <p class="text-center">No Plant Info</p>
-
-        {% endif %}
-
     </div>
-</div>
 
-<div class="d-flex justify-content-center">
-    <div class="row m-5">
-        <div class="col-md-12 m-2">
-
-            {% if plant_info.has_other_pages %}
-            <ul class="pagination justify-content-center">
-
-                {% if plant_info.has_previous %}
-                <li class="page-item">
-                    <a href="?page={{ plant_info.previous_page_number }}" class="page-link">&laquo;</a>
-                </li>
-
-                {% else %}
-                <li class="page-item disabled">
-                    <a class="page-link" href="?page=1">&laquo;</a>
-                </li>
+    <div class="d-flex justify-content-center">
+        <div class="row m-5">
+            <div class="col-md-12 m-2">
+                {% if plant_info.has_other_pages %}
+                <ul class="pagination justify-content-center">
+                    {% if plant_info.has_previous %}
+                    <li class="page-item">
+                        <a href="?page={{ plant_info.previous_page_number }}" class="page-link">&laquo;</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="?page=1">&laquo;</a>
+                    </li>
+                    {% endif %}
+                    {% for i in plant_info.paginator.page_range %}
+                    {% if plant_info.number == i %}
+                    <li class="page-item active">
+                        <a class="page-link">{{ i }}</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if plant_info.has_next %}
+                    <li class="page-item">
+                        <a href="?page={{ plant_info.next_page_number }}" class="page-link">&raquo;</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="?page={{ plant_info.paginator.num_pages }}">&raquo;</a>
+                    </li>
+                    {% endif %}
+                </ul>
                 {% endif %}
-
-                {% for i in plant_info.paginator.page_range %}
-                {% if plant_info.number == i %}
-                <li class="page-item active">
-                    <a class="page-link">{{ i }}</a>
-                </li>
-                {% else %}
-                <li class="page-item">
-                    <a href="?page={{ i }}" class="page-link">{{ i }}</a>
-                </li>
-                {% endif %}
-                {% endfor %}
-
-                {% if plant_info.has_next %}
-                <li class="page-item">
-                    <a href="?page={{ plant_info.next_page_number }}" class="page-link">&raquo;</a>
-                </li>
-                {% else %}
-                <li class="page-item disabled">
-                    <a class="page-link" href="?page={{ plant_info.paginator.num_pages }}">&raquo;</a>
-                </li>
-                {% endif %}
-
-            </ul>
-            {% endif %}
-
+            </div>
         </div>
     </div>
-</div>
+</body>
+
+</html>
+
 
 {% endblock %}

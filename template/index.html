@@ -3,58 +3,16 @@
 
 {% block content %}
 
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
-    <style>
-        img {
-            width: 256px; 
-            height: 256px; 
-            object-fit: cover; 
-        }
-        .flex-container {
-            display: flex;
-        }
-
-        .form-container,
-        .result-container {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            margin-right: 10px; /* Adjust as needed */
-        }
-
-        .result-container {
-            margin-right: 0;
-        }
-
-        .image-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 200px; 
-        }
-
-        .submit-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .name-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .image-container img {
-            max-width: 100%;
-            max-height: 100%;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/display_product.css' %}">
 </head>
 
 <body>
@@ -64,87 +22,109 @@
         <hr>
     
         <div class="flex-container">
-            <div class="form-container">
+            <div class="form-container"><br><br>
                 <form method="post" enctype="multipart/form-data" action="predictImage">
                     {% csrf_token %}
-                    <div><label>Upload Image File Here:</label></div> 
-                    <div class="image-container">
+                    <div class="image-containers">
                         <img id="uploadedImage" src="{% if filePathName %}{{ filePathName }}{% else %} ./static\images\placeholder\placeholder_img.png {% endif %}" alt="image">
                     </div><br>
                     <div class="name-container">
-                        <input name="filePath" type="file" onchange="previewImage(event)"><br><br>
+                        <input name="filePath" type="file" onchange="previewImage(event)" style="background-color: #03ff03;"><br><br>
                     </div>
                     <div class="submit-container">
-                        <input type="submit" value="Submit" class="btn btn-primary btn-sm m-1">
+                        <input type="submit" value="Predict" class="btn btn-sm m-1">
                     </div>
                 </form>
             </div>
             
             <div class="result-container">
-                {% if processing %}
+                {% if label == "Unknown Image" %}
                     <p><strong>Result:</strong> {{label}}</p>
-                    <p><strong>Description:</strong> {{description}}</p>
-                    <p><strong>Cause:</strong> {{cause}}</p>
-                    <p><strong>Solution:</strong> {{label}}</p>
-                    <p><strong>Confidence:</strong> {{confidence}}%<p>
-                {% else %}
-                    <p>Result Here...</p>
+                {%else%}
+                    {% if processing %}
+                        <p><strong>Result:</strong> {{label}}</p>
+                        <p><strong>Description:</strong> {{description}}</p>
+                        <p><strong>Cause:</strong> {{cause}}</p>
+                        <p><strong>Solution:</strong> {{solution}}</p>
+                        <p><strong>Confidence:</strong> {{confidence}}%<p>
+                    {% else %}
+                        <p>Result Here...</p>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
     </div>
 
-        {% if recommended_products %}
-        <div class="row justify-content-among m-4">
-            <h2>Recommended Products</h2>
-            <div class="row">
+    {% if recommended_products %}
+        <div class="row justify-content-center m-4">
+            <h2 style="padding-left: 40%;">Recommended Products</h2>
                 {% for product in recommended_products %}
-                <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4">
-
-                    <div class="card p-2"  style="height: 50vh;">
-                        <a href="{% url 'product_detail' product.pk %}">
-                            <div class="image-container" style="height: 100px; overflow: hidden;">
-                                <img src="{{ product.product_image.url }}" class="card-img-top" alt="image" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div class="col-lg-4 col-md-6 col-sm-6 mb-4" style="width: 200px;">
+                        <div class="product-card" >
+                            <a href="{% url 'product_detail' product.pk %}">
+                                <div class="image-container">
+                                    <img src="{{ product.product_image.url }}" class="card-img-top" alt="image">
+                                </div>
+                            
+                            <div class="card-body">
+                                <p class="card-title"><strong>{{ product.product_name }} </strong></p>
+                                <p class="card-text">{{ product.product_description|slice:":20" }}{% if product.product_description|length > 25 %}...{% endif %}</p>
                             </div>
-                        </a>
-                        <div class="card-body">
-                            <p class="card-title"><strong>{{ product.product_name }} </strong></p>
-                            <p class="card-text">{{ product.product_description|slice:":25" }}{% if product.product_description|length > 25 %}...{% endif %}</p>
-                        </div>
-    
-                        <div>
                             <hr>
-                            <p style="margin-bottom: 10px; margin-left: 20px;"> <strong>Rs.</strong> {{ product.product_price }}</p>
-                        </div>
-    
-                        <div class="d-flex flex-row justify-content-center mb-3">
-                            <div>
-                                <a href="{% url 'product_detail' product.pk %}" class="btn btn-primary btn-sm "><i class="fas fa-info-circle"></i></a>
-                                <a href="{% url 'add_to_cart' product_id=product.pk %}" class="btn btn-primary btn-sm"><i class="fas fa-cart-plus"></i></a>
+                            {% if product.product_quantity == 0 %}
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="price"><strong>Rs. {{ product.product_price }}</strong></p>
+                                <div>
+                                    <p style="color: red;"><strong>Sold Out</strong></p>
+                                </div>
                             </div>
-                        </div>  
+                            {% else %}
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="price"><strong>Rs. {{ product.product_price }}</strong></p>
+                                <div>
+                                    <a href="{% url 'add_to_cart' product_id=product.pk %}" class="btn btn-sm"><i class="fas fa-cart-plus"></i></a>
+                                </div>
+                            </div>
+                            {% endif %}
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    {% if recommended_plants %}
+        <div class="row justify-content-center m-4">
+            <h2 style="padding-left: 40%;">Recommended Plant Info</h2>
+                {% for plant in recommended_plants %}
+                <div class="col-lg-4 col-md-6 col-sm-6 mb-4" style="width: 200px;">
+                    <div class="product-card">
+                        <a href="{% url 'plant_detail' plant.pk %}">
+                            <div class="image-container">
+                                <img src="{{ plant.plant_image.url }}" class="card-img-top" alt="image">
+                            </div>
+                        
+                            <div class="card-body">
+                                <p class="card-title"><strong>{{ plant.plant_name }} </strong></p>
+                                <p class="card-text">{{ plant.plant_description|slice:":40" }}{% if plant.plant_description|length > 40 %}...{% endif %}</p>
+                            </div>
+                            <hr>
+
+                            <div class="d-flex justify-content-center mb-3">
+                                <div>
+                                    <a href="{% url 'add_favorite' plant.pk %}" class="btn btn-sm {% if plant.pk in favorite_plants %}btns{% else %}btn{% endif %}" id="favoriteBtn{{ plant.pk }}"><i class="far fa-heart"></i></a>
+                                </div>
+                            </div>                                    
+                        </a>
                     </div>
                 </div>
                 {% endfor %}
             </div>
-        </div>
         {% endif %}
-    </div>
 
 
-    <script>
-        function previewImage(event) {
-            var input = event.target;
-            var reader = new FileReader();
-            reader.onload = function(){
-                var dataURL = reader.result;
-                var img = document.getElementById('uploadedImage');
-                img.src = dataURL;
-                img.style.display = 'block'; 
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    </script>
+    <script src="{% static 'js/index.js' %}"></script>
+
     
 </body>
 </html>

@@ -1,57 +1,257 @@
 {% extends 'include/admin_navbar.html' %}
 
 {% block content %}
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Admin Dashboard</title>
-    
-<style>
-    .header {
-        background-color: #0f3d0f;
-        color: #fff;
-        width: 100%;
-        height: 60px;
-        font-size: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .header p {
-        padding-top: 15px;
-    }
-</style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Style the header */
+        .header {
+            background-color: #0f3d0f;
+            color: #fff;
+            width: 100%;
+            height: 60px;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Style the header text */
+        .header p {
+            padding: 45px;
+            font-weight: bold;
+        }
+
+        /* Style the form */
+        form {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Style the form label */
+        label {
+            margin-right: 5px;
+            font-weight: bold;
+        }
+
+        /* Style the form select and button */
+        select, button {
+            margin-left: 5px;
+            font-size: 16px;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        /* Style the h1 tag */
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* Style the p tag */
+        p {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* Style the h4 tag */
+        h4 {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #0f3d0f;
+        }
+
+        /* Style the h3 tag */
+        h3 {
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #0f3d0f;
+        }
+
+        /* Style the canvas element */
+        canvas {
+            margin: 0 auto;
+            display: block;
+            width: 600px;
+            height: 400px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Style the chart container */
+        .chart-container {
+            margin: 0 auto;
+            width: 600px;
+            text-align: center;
+        }
+
+        .btn {
+            background-color: #32cd32; 
+            border-color: #32cd32; 
+            color: #fff; 
+        }
+
+        /* Media query for smaller screens */
+        @media screen and (max-width: 600px) {
+            /* Make the canvas element responsive */
+            canvas {
+                width: 100%;
+                height: auto;
+            }
+
+            /* Make the h1, h3, and h4 tags smaller */
+            h1, h3, h4 {
+                font-size: 24px;
+            }
+        }
+    </style>
 </head>
 <body>
-    
-    <div class="header text-center">
-        <p class="mx-auto">Admin Dashboard</p>
-    </div><br>
-    
-    <h1>Total Sales</h1>
-    <form method="POST">
-        {% csrf_token %}
-        <select name="selected_month">
-            <option value="">Select Month</option>
-            {% for month_num, month_name in months %}
-                <option value="{{ month_num }}" {% if selected_month == month_num %} selected {% endif %}>{{ month_name }}</option>
-            {% endfor %}
-        </select>
-        <select name="selected_year">
-            <option value="">Select Year</option>
-            {% for year_value, year_label in years %}
-                <option value="{{ year_value }}" {% if selected_year == year_value %} selected {% endif %}>{{ year_label }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">Show</button>
-    </form>
-    {% if total_sales %}
-        <p>Total Sales for the selected month: ${{ total_sales }}</p>
-    {% endif %}
+<div class="header">
+    <p>Admin Dashboard</p>
+</div><br>
+
+<!-- Total Sales Section -->
+<h1>Total Sales For Any Month and Year</h1>
+<form method="POST">
+    {% csrf_token %}
+    <label for="selected_month">Months:</label>
+    <select name="selected_month">
+        <option value="">Select Month</option>
+        {% for month_num, month_name in months %}
+            <option value="{{ month_num }}" {% if selected_month == month_num %} selected {% endif %}>{{ month_name }}</option>
+        {% endfor %}
+    </select>
+    <label for="selected_year">Years:</label>
+    <select name="selected_year">
+        <option value="">Select Year</option>
+        {% for year_value, year_label in years %}
+            <option value="{{ year_value }}" {% if selected_year == year_value %} selected {% endif %}>{{ year_label }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn">Show</button>
+</form>
+{% if total_sales or total_e_sales %}
+    <p style="color: red;">Total Sales for the selected month and year: Rs. {{ total_sales }}</p>
+    <p style="color: red;">Total Expected Sales for the selected month and year: Rs. {{ total_e_sales }}</p>
+{% else %}
+    <p>Please choose year and month above to filter.</p>
+{% endif %}
+
+<!-- Pie Chart Section -->
+{% if payment_methods %}
+    <h3>Most Used Payment Method</h3>
+    <canvas id="paymentMethodChart"></canvas>
+
+    <script>
+        var payment_methods_str = '{{ payment_methods | safe }}';
+        var payment_methods = JSON.parse(payment_methods_str);    
+        var labels = [];
+        var counts = [];
+        var backgroundColors = [];
+
+        for (var i = 0; i < payment_methods.length; i++) {
+            labels.push(payment_methods[i].payment_method);
+            counts.push(payment_methods[i].count);
+            var color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+            backgroundColors.push(color + '80'); 
+        }
+
+        var ctx = document.getElementById('paymentMethodChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Payment Methods Used',
+                    data: counts,
+                    backgroundColor: backgroundColors
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+{% endif %}
+
+{% if product_sales %}
+    <div class="chart-container" style="margin-top: 30px;">
+        <h3>Product Sales</h3>
+        <canvas id="productSalesChart"></canvas>
+    </div>
+
+    <script>
+        var product_sales_str = '{{ product_sales | safe }}';
+        var product_sales = JSON.parse(product_sales_str);
+        var labels = [];
+        var salesData = [];
+
+        product_sales.forEach(function(item) {
+            labels.push(item.product_name);
+            salesData.push(item.sales);
+        });
+
+        var ctx = document.getElementById('productSalesChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Sales',
+                    data: salesData,
+                    backgroundColor: backgroundColors, 
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                elements: {
+                    bar: {
+                        borderWidth: 2,
+                    }
+                },
+                responsive: true,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+            }
+        });
+    </script>
+{% endif %}  
+<br>
+
+<!-- Overall Sales Section -->
+<h3>Overall Expected Sales till now: Rs. {{ overall_expected_sales }}</h3>
+<h3>Overall Actual Sales till now: Rs. {{ overall_sales }}</h3>
+
+<br>
 </body>
 </html>
-
 {% endblock %}

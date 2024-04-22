@@ -1,68 +1,123 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<style>
-    .container {
-        width: 80%; 
-        margin: 0 auto;  
-    }
-    .image-cell img {
-        max-width: 100px; 
-        max-height: 100px;
-    }
-    table thead {
-        background-color: #4CAF50; 
-        color: #fff; 
-    }
-    table tbody tr:nth-child(odd) {
-        background-color: #e6ffe6; 
-        color: #000; 
-    }
-    table tbody tr:nth-child(even) {
-        background-color: #f0f0f0; 
-    }
-    .title {
-        margin-left: 35%;
-    }
-</style>
 
-<div class="container">
-    <div class="title" >
-        <h1>Prediction History</h1>
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction History</title>
+    <style>
+        .container {
+            width: 80%; 
+            margin: 0 auto;  
+        }
+        .image-cell img {
+            max-width: 100px; 
+            max-height: 100px;
+        }
+        table thead {
+            background-color: #4CAF50; 
+            color: #fff; 
+        }
+        table tbody tr:nth-child(odd) {
+            background-color: #e6ffe6; 
+            color: #000; 
+        }
+        table tbody tr:nth-child(even) {
+            background-color: #f0f0f0; 
+        }
+        .title {
+            margin-left: 35%;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/pagination.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="title" >
+            <h1>Prediction History</h1>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Predicted Label</th>
+                        <th>Confidence</th>
+                        <th>Recommended Products</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prediction in predictions %}
+                    <tr>
+                        <td class="image-cell"><img src="{{ prediction.image_path }}" alt="Predicted Image"></td>
+                        <td>{{ prediction.predicted_label }}</td>
+                        <td>{{ prediction.confidence }}%</td>
+                        <td>
+                            <ul>
+                                {% for product in prediction.recommended_products %}
+                                    <li>{{ product }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td>{{ prediction.timestamp }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="10">No predictions yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Predicted Label</th>
-                    <th>Confidence</th>
-                    <th>Recommended Products</th>
-                    <th>Timestamp</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for prediction in predictions %}
-                <tr>
-                    <td class="image-cell"><img src="{{ prediction.image_path }}" alt="Predicted Image"></td>
-                    <td>{{ prediction.predicted_label }}</td>
-                    <td>{{ prediction.confidence }}%</td>
-                    <td>
-                        <ul>
-                            {% for product in prediction.recommended_products %}
-                                <li>{{ product }}</li>
-                            {% endfor %}
-                        </ul>
-                    </td>
-                    <td>{{ prediction.timestamp }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="10">No predictions yet.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+
+    <div class="d-flex justify-content-center">
+        <div class="row m-5">
+            <div class="col-md-12 m-2">
+                {% if predictions.has_other_pages %}
+                    <ul class="pagination">
+                        {% if predictions.has_previous %}
+                            <li class="page-item">
+                                <a href="?page={{ predictions.previous_page_number }}" class="page-link">&laquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="?page=1">&laquo;</a>
+                            </li>
+                        {% endif %}
+                        {% for i in predictions.paginator.page_range %}
+                            {% if predictions.number == i %}
+                                <li class="page-item active">
+                                    <a class="page-link">{{ i }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if predictions.has_next %}
+                            <li class="page-item">
+                                <a href="?page={{ predictions.next_page_number }}" class="page-link">&raquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="?page={{ predictions.paginator.num_pages }}">&raquo;</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
     </div>
-</div>
+</body>
+</html>
+
 {% endblock %}

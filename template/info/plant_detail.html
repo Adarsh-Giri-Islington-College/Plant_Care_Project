@@ -2,73 +2,40 @@
 
 {% block content %}
 
-<style>
-    .container {
-        margin-top: 20px;
-    }
-    .card {
-        background-color: #fff;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        border-radius: 8px;
-    }
+{% load static %}
 
-    .image {
-        width: 100%;
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Detail</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/plant_detail.css' %}">
+</head>
 
-    .img-fluid {
-        width: 100%;
-        height: auto;
-    }
-
-    h2 {
-        color: #333;
-        font-size: 24px;
-        margin-top: 0;
-        margin-bottom: 10px;
-    }
-
-    p {
-        color: #666;
-        font-size: 16px;
-        line-height: 1.5;
-        margin-bottom: 8px;
-    }
-
-    strong {
-        font-weight: bold;
-    }
-
-    .is-affected {
-        color: #d9534f;
-    }
-
-    .description {
-        margin-top: 20px;
-    }
-</style>
-
-<div class="container">
-    <div class="row">
-        <div class="col-md-5" class="image">
-            <img src="{{ eachPlant.plant_image.url }}" alt="{{ eachPlant.plant_common_name }}" class="img-fluid">
-        </div>
-        <div class="col-md-6"><br>
-            <div class="card">
-                <div class="card-body">
-                    <h2>{{ eachPlant.plant_name }}</h2>
-                    <p><strong>Is Affected:</strong> {% if eachPlant.is_affected %}Yes{% else %}No{% endif %}</p>
-                    {% if eachPlant.is_affected %}
-                        <p><strong>Cause:</strong> {{ eachPlant.cause }}</p>
-                        <p><strong>Solution:</strong> {{ eachPlant.solution }}</p>
-                    {% endif %}
-                    <p><strong>Description:</strong></p>
-                    <p>{{ eachPlant.plant_description }}</p>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5" class="image"><br>
+                <img src="{{ eachPlant.plant_image.url }}" alt="{{ eachPlant.plant_common_name }}" class="img-fluid">
+            </div>
+            <div class="col-md-6"><br>
+                <div class="card">
+                    <div class="card-body">
+                        <h2>{{ eachPlant.plant_name }}</h2>
+                        <p><strong>Description:</strong></p>
+                        <p>{{ eachPlant.plant_description }}</p>
+                        <p><strong>Is Affected:</strong> {% if eachPlant.is_affected %}Yes{% else %}No{% endif %}</p>
+                        {% if eachPlant.is_affected %}
+                            <p><strong>Cause:</strong> {{ eachPlant.cause }}</p>
+                            <p><strong>Solution:</strong> {{ eachPlant.solution }}</p>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
+        </div><br>
     </div>
-</div>
+</body>
+</html>
 
 {% endblock %}

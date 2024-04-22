@@ -2,39 +2,50 @@
 
 {% block content %}
 
-<style>
-    .header {
-        background-color: #0f3d0f;
-        color: #fff;
-        width: 100%;
-        height: 60px;
-        font-size: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .header p {
-        padding-top: 15px;
-    }
-</style>
+{% load static %}
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product Category</title>
+    <style>
+        .header {
+            background-color: #0f3d0f;
+            color: #fff;
+            width: 100%;
+            height: 60px;
+            font-size: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header p {
+            padding-top: 15px;
+        }
+    </style>
+</head>
 
-<div class="header text-center">
-    <p class="mx-auto"> Add New Product Category</p>
-</div>
+<body>
+    <div class="header text-center">
+        <p class="mx-auto"> Add New Product Category</p>
+    </div>
 
-<div class="container m-3">
-    <form method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="id_category_name">Product Catogory Name: </label>
-            {{ form.category_name }}
-        </div><br>
-        {% if error_message %}
-            <p class="text-danger">{{ error_message }}</p> 
-        {% endif %}
-        <button type="submit" class="btn" style="background-color: #009933; color: white;">Add Product Category</button>
-    </form>
-</div>
+    <div class="container m-3">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_category_name">Product Catogory Name: </label>
+                {{ form.category_name }}
+            </div><br>
+            {% if error_message %}
+                <p class="text-danger">{{ error_message }}</p> 
+            {% endif %}
+            <button type="submit" class="btn" style="background-color: #009933; color: white;">Add Product Category</button>
+        </form>
+    </div>
+</body>
+</html>
 
 {% endblock %}

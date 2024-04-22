@@ -2,39 +2,50 @@
 
 {% block content %}
 
+{% load static %}
 
-<style>
-    .btn {
-        background-color: #32cd32; 
-        border-color: #32cd32; 
-        color: #fff; 
-    }
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <style>
+        .btn {
+            background-color: #32cd32; 
+            border-color: #32cd32; 
+            color: #fff; 
+        }
+    </style>
+</head>
 
-<div class="container mt-5">
-    <div class="card mx-auto" style="max-width: 400px;">
-        <div class="card-header">
-            <h5 class="card-title text-center"><strong>Payment</strong></h5>
-        </div>
-        <div class="card-body">
-            <form action="{% url 'khalti_payment' %}" method="POST">
-                {% csrf_token %}
-                <div class="form-group">
-                    <strong><label for="payment-method-select">Select Payment Method:</label></strong>
-                    <select name="payment_method" id="payment-method-select" class="form-control">
-                        {% for method in payment_method_choices %}
-                            <option value="{{ method.0 }}">{{ method.1 }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <input type="hidden" name="purchase_order_id" value="1">
-                <input type="hidden" name="amount" value="{{ total_price }}">
-                <input type="hidden" name="return_url" value="http://127.0.0.1:8000/order/verify_payment">
-                <p><strong>Total Cost: <input type="text" value="{{ total_display_price }}" class="form-control mb-3" readonly></strong></p>
-                <button type="submit" class="btn">Place Order</button>
-            </form>
+<body>
+    <div class="container mt-5">
+        <div class="card mx-auto" style="max-width: 400px;">
+            <div class="card-header">
+                <h5 class="card-title text-center"><strong>Payment</strong></h5>
+            </div>
+            <div class="card-body">
+                <form action="{% url 'khalti_payment' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <strong><label for="payment-method-select">Select Payment Method:</label></strong>
+                        <select name="payment_method" id="payment-method-select" class="form-control">
+                            {% for method in payment_method_choices %}
+                                <option value="{{ method.0 }}">{{ method.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input type="hidden" name="purchase_order_id" value="1">
+                    <input type="hidden" name="amount" value="{{ total_price }}">
+                    <input type="hidden" name="return_url" value="http://127.0.0.1:8000/order/verify_payment">
+                    <p><strong>Total Cost: <input type="text" value="{{ total_display_price }}" class="form-control mb-3" readonly></strong></p>
+                    <button type="submit" class="btn">Place Order</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+</body>
+</html>
 
 {% endblock %}

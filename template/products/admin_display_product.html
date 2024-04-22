@@ -2,54 +2,64 @@
 
 {% block content %}
 
-<style>
-    .header {
-        background-color: #0f3d0f;
-        color: #fff;
-        width: 100%;
-        height: 60px;
-        font-size: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .header p {
-        padding-top: 15px;
-    }
-    .header a {
-        background-color: #009933;
-        color: #fff;
-    }
-    .header button {
-        background-color: #009933;
-        color: #fff;
-    }
-    .search-bar {
-        background-color: #4CAF50; 
-        border-radius: 5px;
-    }
-    .search-btn {
-        background-color: #4CAF50; 
-        border: none;
-        color: white;
-    }
-    .search-icon {
-        color: white;
-    }
-    table thead {
-        background-color: #4CAF50; 
-        color: #fff; 
-    }
-    table tbody tr:nth-child(odd) {
-        background-color: #e6ffe6; 
-        color: #fff; 
-    }
+{% load static %}
 
-    table tbody tr:nth-child(even) {
-        background-color: #f0f0f0; 
-    }
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    <style>
+        .header {
+            background-color: #0f3d0f;
+            color: #fff;
+            width: 100%;
+            height: 60px;
+            font-size: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header p {
+            padding-top: 15px;
+        }
+        .header a {
+            background-color: #009933;
+            color: #fff;
+        }
+        .header button {
+            background-color: #009933;
+            color: #fff;
+        }
+        .search-bar {
+            background-color: #4CAF50; 
+            border-radius: 5px;
+        }
+        .search-btn {
+            background-color: #4CAF50; 
+            border: none;
+            color: white;
+        }
+        .search-icon {
+            color: white;
+        }
+        table thead {
+            background-color: #4CAF50; 
+            color: #fff; 
+        }
+        table tbody tr:nth-child(odd) {
+            background-color: #e6ffe6; 
+            color: #fff; 
+        }
+    
+        table tbody tr:nth-child(even) {
+            background-color: #f0f0f0; 
+        }
+    </style>
+</head>
 
+<body>
 <div class="header text-center">
     <p class="mx-auto">Manage Products</p>
     <a href="{% url 'add_product' %}" class="btn">Add Product</a>
@@ -162,6 +172,7 @@
         </div>
       </div>
   </div>
-
+</body>
+</html>
   
 {% endblock %}

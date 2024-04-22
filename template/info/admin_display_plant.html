@@ -2,154 +2,166 @@
 
 {% block content %}
 
-<style>
-    .header {
-        background-color: #0f3d0f;
-        color: #fff;
-        width: 100%;
-        height: 60px;
-        font-size: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .header p {
-        padding-top: 15px;
-    }
-    .header a {
-        background-color: #009933;
-        color: #fff;
-    }
-    .search-bar {
-        background-color: #4CAF50; 
-        border-radius: 5px;
-    }
-    .search-btn {
-        background-color: #4CAF50; 
-        border: none;
-        color: white;
-    }
-    .search-icon {
-        color: white;
-    }
-    table thead {
-        background-color: #4CAF50; 
-        color: #fff; 
-    }
-    table tbody tr:nth-child(odd) {
-        background-color: #e6ffe6; 
-        color: #fff; 
-    }
+{% load static %}
 
-    table tbody tr:nth-child(even) {
-        background-color: #fff; 
-    }
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plants</title>
+    <style>
+        .header {
+            background-color: #0f3d0f;
+            color: #fff;
+            width: 100%;
+            height: 60px;
+            font-size: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header p {
+            padding-top: 15px;
+        }
+        .header a {
+            background-color: #009933;
+            color: #fff;
+        }
+        .search-bar {
+            background-color: #4CAF50; 
+            border-radius: 5px;
+        }
+        .search-btn {
+            background-color: #4CAF50; 
+            border: none;
+            color: white;
+        }
+        .search-icon {
+            color: white;
+        }
+        table thead {
+            background-color: #4CAF50; 
+            color: #fff; 
+        }
+        table tbody tr:nth-child(odd) {
+            background-color: #e6ffe6; 
+            color: #fff; 
+        }
+    
+        table tbody tr:nth-child(even) {
+            background-color: #fff; 
+        }
+    </style>
+</head>
 
-<div class="header text-center">
-    <p class="mx-auto"> Manage Plant Informations </p>
-    <a href="{% url 'add_plant' %}" class="btn">Add Plant Info</a>
-</div>
-
-<div class="container">
-    <div class="row mt-3">
-        <div class="col-md-6 mx-auto">
-            <form action="{% url 'plant_search' %}" method="get" class="rounded p-2 search-bar">
-                <div class="input-group">
-                    <input class="form-control rounded-0" type="text" name="user_query" placeholder="Search Plant Informations" aria-label="Search">
-                    <div class="input-group-append">
-                        <button class="btn rounded-0 search-btn" type="submit"><i class="fas fa-search search-icon"></i></button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div><br>
-
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th class="small">Image</th>
-                    <th class="small">Plant Name</th>
-                    <th class="small">Description</th>
-                    <th class="small">Cause</th>
-                    <th class="small">Solution</th>
-                    <th class="small">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if plant_info %}
-                    {% for plant in plant_info %}
-                        <tr>
-                            <td >
-                                <img src="{{ plant.plant_image.url }}" class="img-thumbnail" alt="Plant Image" style="max-width: 70px;">
-                            </td>
-                            <td class="small">{{ plant.plant_name }}</td>
-                            <td class="small">{{ plant.plant_description|slice:":25" }}{% if plant.plant_description|length > 25 %}...{% endif %}</td>
-                            <td class="small">{{ plant.cause }}</td>
-                            <td class="small">{{ plant.solution }}</td>
-                            <td class="small">
-                                <a href="{% url 'update_plant' plant.pk %}" class="btn btn-primary btn-sm" title="Edit Plant"><i class="fas fa-edit">Edit</i></a>
-                                <a href="{% url 'delete_plant' plant.pk %}" class="btn btn-danger btn-sm" title="Delete Plant"><i class="fas fa-trash-alt"></i></a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr>
-                        <td colspan="7" class="text-center">No Plant Info</td>
-                    </tr>
-                {% endif %}
-            </tbody>
-        </table>
+<body>
+    <div class="header text-center">
+        <p class="mx-auto"> Manage Plant Informations </p>
+        <a href="{% url 'add_plant' %}" class="btn">Add Plant Info</a>
     </div>
-</div>
 
-<div class="d-flex justify-content-center">   
-    <div class="row m-5">
-        <div class="col-md-12 m-2">
+    <div class="container">
+        <div class="row mt-3">
+            <div class="col-md-6 mx-auto">
+                <form action="{% url 'plant_search' %}" method="get" class="rounded p-2 search-bar">
+                    <div class="input-group">
+                        <input class="form-control rounded-0" type="text" name="user_query" placeholder="Search Plant Informations" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn rounded-0 search-btn" type="submit"><i class="fas fa-search search-icon"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div><br>
 
-            {% if plant_info.has_other_pages %}
-                <ul class="pagination justify-content-center">
-                
-                {% if plant_info.has_previous %}  
-                    <li class="page-item">
-                        <a href="?page={{ plant_info.previous_page_number }}" class="page-link">&laquo;</a>
-                    </li>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="small">Image</th>
+                        <th class="small">Plant Name</th>
+                        <th class="small">Description</th>
+                        <th class="small">Cause</th>
+                        <th class="small">Solution</th>
+                        <th class="small">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if plant_info %}
+                        {% for plant in plant_info %}
+                            <tr>
+                                <td >
+                                    <img src="{{ plant.plant_image.url }}" class="img-thumbnail" alt="Plant Image" style="max-width: 70px;">
+                                </td>
+                                <td class="small">{{ plant.plant_name }}</td>
+                                <td class="small">{{ plant.plant_description|slice:":25" }}{% if plant.plant_description|length > 25 %}...{% endif %}</td>
+                                <td class="small">{{ plant.cause }}</td>
+                                <td class="small">{{ plant.solution }}</td>
+                                <td class="small">
+                                    <a href="{% url 'update_plant' plant.pk %}" class="btn btn-primary btn-sm" title="Edit Plant"><i class="fas fa-edit">Edit</i></a>
+                                    <a href="{% url 'delete_plant' plant.pk %}" class="btn btn-danger btn-sm" title="Delete Plant"><i class="fas fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center">No Plant Info</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-                {% else %}
-                    <li class="page-item disabled">
-                        <a class="page-link" href="?page=1">&laquo;</a>
-                    </li>     
-                {% endif %}
+    <div class="d-flex justify-content-center">   
+        <div class="row m-5">
+            <div class="col-md-12 m-2">
 
-                {% for i in plant_info.paginator.page_range %}
-                    {% if plant_info.number == i %}
-                        <li class="page-item active">
-                            <a class="page-link">{{ i }}</a>
+                {% if plant_info.has_other_pages %}
+                    <ul class="pagination justify-content-center">
+                    
+                    {% if plant_info.has_previous %}  
+                        <li class="page-item">
+                            <a href="?page={{ plant_info.previous_page_number }}" class="page-link">&laquo;</a>
+                        </li>
+
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="?page=1">&laquo;</a>
+                        </li>     
+                    {% endif %}
+
+                    {% for i in plant_info.paginator.page_range %}
+                        {% if plant_info.number == i %}
+                            <li class="page-item active">
+                                <a class="page-link">{{ i }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                            </li>  
+                        {% endif %}
+                    {% endfor %}
+
+
+                    {% if plant_info.has_next %}  
+                        <li class="page-item">
+                            <a href="?page={{ plant_info.next_page_number }}" class="page-link">&raquo;</a>
                         </li>
                     {% else %}
-                        <li class="page-item">
-                            <a href="?page={{ i }}" class="page-link">{{ i }}</a>
-                        </li>  
+                        <li class="page-item disabled">
+                            <a class="page-link" href="?page={{ plant_info.paginator.num_pages }}">&raquo;</a>
+                        </li>     
                     {% endif %}
-                {% endfor %}
 
-
-                {% if plant_info.has_next %}  
-                    <li class="page-item">
-                        <a href="?page={{ plant_info.next_page_number }}" class="page-link">&raquo;</a>
-                    </li>
-                {% else %}
-                    <li class="page-item disabled">
-                        <a class="page-link" href="?page={{ plant_info.paginator.num_pages }}">&raquo;</a>
-                    </li>     
+                    </ul>
                 {% endif %}
 
-                </ul>
-            {% endif %}
-
+            </div>
         </div>
-      </div>
-  </div>
+    </div>
+  </body>
+  </html>
         
 {% endblock %}

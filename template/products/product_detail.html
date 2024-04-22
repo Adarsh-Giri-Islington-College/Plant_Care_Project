@@ -1,160 +1,80 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <style>
-        /* CSS for Stars */
-        .stars {
-            color: #ffc107;
-        }
 
-        .checked {
-            color: #ffc107;
-        }
+{% load static %}
 
-        .star-icon {
-            font-size: 1.2rem; /* Adjust size of star icons */
-        }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/product_detail.css' %}">
+</head>
 
-        /* Additional Styling */
-        .card {
-            border: 1px solid rgba(0, 0, 0, 0.125);
-            border-radius: 0.25rem;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-            background-color: #fff; /* Added background color */
-        }
-
-        .card-body {
-            padding: 20px; /* Increased padding */
-        }
-
-        .card-title {
-            color: #333;
-            font-size: 1.5rem; /* Increased font size */
-            margin-bottom: 15px; /* Added margin bottom */
-        }
-
-        .card-subtitle {
-            color: #007bff;
-            font-size: 1.2rem; /* Increased font size */
-            margin-bottom: 10px; /* Added margin bottom */
-        }
-
-        .card-text {
-            color: #666;
-            margin-bottom: 20px; /* Added margin bottom */
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
-        }
-
-        .rating {
-            margin-top: 20px;
-            margin-bottom: 20px; /* Added margin bottom */
-        }
-
-        .list-group-item {
-            background-color: #f8f9fa;
-            border: 1px solid rgba(0, 0, 0, 0.125);
-            border-radius: 0.25rem;
-            margin-top: 10px; /* Added margin top */
-        }
-
-        .list-group-item:first-child {
-            border-top-left-radius: 0.25rem; /* Adjusted border radius for first item */
-            border-top-right-radius: 0.25rem; /* Adjusted border radius for first item */
-        }
-
-        .list-group-item:last-child {
-            border-bottom-left-radius: 0.25rem; /* Adjusted border radius for last item */
-            border-bottom-right-radius: 0.25rem; /* Adjusted border radius for last item */
-        }
-
-        .list-group-item strong {
-            color: #333; /* Adjusted color for strong elements */
-        }
-
-        .product-image {
-            max-width: 100%; /* Ensure the image does not exceed the container width */
-            height: auto; /* Maintain aspect ratio */
-        }
-
-        .product-details {
-            padding-left: 20px; /* Add padding to the left of the product details */
-        }
-
-        .user-image {
-            width: 40px; /* Adjust size of user image */
-            height: 40px; /* Adjust size of user image */
-            border-radius: 50%; /* Make image circular */
-            margin-right: 10px; /* Add margin to separate image from text */
-        }
-    </style>
-
+<body>
     <div class="container">
-            <div class="col-md-12"> <!-- Full width for product description -->
-                <div class="card m-5 p-2">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <img src="{{ eachProduct.product_image.url }}" class="product-image" alt="{{ eachProduct.product_name }}">
-                        </div>
-                        <div class="col-md-8 product-details">
-                            <h5 class="card-title"><b>Name:</b> {{ eachProduct.product_name }}</h5>
-                            <div class="rating">
-                                <div class="stars">
-                                    {% for i in rating_range %}
-                                        {% if i < overall_rating %}
-                                            <span class="star-icon checked">&#9733;</span> <!-- Checked star -->
-                                        {% else %}
-                                            <span class="star-icon">&#9734;</span> <!-- Unchecked star -->
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                            </div>
-                            <h4 class="card-subtitle"><b>Price:</b> ${{ eachProduct.product_price }}</h4>
-                            <hr>
-                            <p class="card-text"><b>Description:</b> {{ eachProduct.product_description }}</p>
-                            <p class="card-text"><small class="text-muted">Added: {{ eachProduct.added_at }}</small></p>
-                            
-                            {% if has_reviewed %}
-                                {% if ordered %}
-                                    <form method="post" action="{% url 'product_detail' eachProduct.pk %}">
-                                        {% csrf_token %}
-                                        {{ form.as_p }}
-                                        <button type="submit" class="btn btn-primary mt-3">Submit Review</button>
-                                    </form>
-                                {% endif %}
-                            {% endif %}
-                            
-                            <hr>
-                        </div>
+        <div class="col-md-12">
+            <div class="card m-5 p-2">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="{{ eachProduct.product_image.url }}" class="product-image" alt="{{ eachProduct.product_name }}">
                     </div>
-                                        
-                    <ul class="list-group">
-                        {% for review in eachProduct.review_set.all %}
-                            <li class="list-group-item">
-                                <img src="{{ review.user.user_image.url }}" alt="{{ review.user.username }}" class="user-image">
-                                {{ review.user.username }}<br>
-                                <div class="stars">
-                                    {% for i in rating_range %}
-                                        {% if i < review.rating %}
-                                            <span class="star-icon checked">&#9733;</span> <!-- Checked star -->
-                                        {% else %}
-                                            <span class="star-icon">&#9734;</span> <!-- Unchecked star -->
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                                {{ review.comment }}<br>
-                            </li>
-                        {% endfor %}
-                    </ul>
+                    <div class="col-md-8 product-details">
+                        <h5 class="card-title"><b>Name:</b> {{ eachProduct.product_name }}</h5>
+                        <div class="rating">
+                            <div class="stars">
+                                {% for i in rating_range %}
+                                    {% if i < overall_rating %}
+                                        <span class="star-icon checked">&#9733;</span>
+                                    {% else %}
+                                        <span class="star-icon">&#9734;</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <h4 class="card-subtitle"><b>Price:</b> ${{ eachProduct.product_price }}</h4>
+                        <hr>
+                        <p class="card-text"><b>Description:</b> {{ eachProduct.product_description }}</p>
+                        <p class="card-text"><small class="text-muted">Added: {{ eachProduct.added_at }}</small></p>
+                        
+                        {% if has_reviewed %}
+                            {% if ordered %}
+                                <form method="post" action="{% url 'product_detail' eachProduct.pk %}">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                    <button type="submit" class="btn btn-primary mt-3">Submit Review</button>
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                        
+                        <hr>
+                    </div>
                 </div>
+                                    
+                <ul class="list-group">
+                    {% for review in eachProduct.review_set.all %}
+                        <li class="list-group-item">
+                            <img src="{{ review.user.user_image.url }}" alt="{{ review.user.username }}" class="user-image">
+                            {{ review.user.username }}<br>
+                            <div class="stars">
+                                {% for i in rating_range %}
+                                    {% if i < review.rating %}
+                                        <span class="star-icon checked">&#9733;</span>
+                                    {% else %}
+                                        <span class="star-icon">&#9734;</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            {{ review.comment }}<br>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </div>
+</body>
+</html>
+
 {% endblock %}

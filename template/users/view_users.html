@@ -1,152 +1,122 @@
 {% extends 'include/admin_navbar.html' %}
 
 {% block content %}
-  
-<style>
-    .header {
-        background-color: #0f3d0f;
-        color: #fff;
-        width: 100%;
-        height: 60px;
-        font-size: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .header p {
-        padding-top: 15px;
-    }
-    .header a {
-        background-color: #009933;
-        color: #fff;
-    }
-    .search-bar {
-        background-color: #4CAF50; 
-        border-radius: 5px;
-    }
-    .search-btn {
-        background-color: #4CAF50; 
-        border: none;
-        color: white;
-    }
-    .search-icon {
-        color: white;
-    }
-    table thead {
-        background-color: #4CAF50; 
-        color: #fff; 
-    }
-    table tbody tr:nth-child(odd) {
-        background-color: #e6ffe6; 
-        color: #fff; 
-    }
 
-    table tbody tr:nth-child(even) {
-        background-color: #fff; 
-    }
-</style>
+{% load static %}
 
-<div class="header text-center">
-    <p class="mx-auto"> Manage Users</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Users</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/view_user.css' %}">
+</head>
 
-<div class="container">
-    <div class="row mt-3">
-        <div class="col-md-6 mx-auto">
-            <form action="{% url 'user_search' %}" method="get" class="rounded p-2 search-bar">
-                <div class="input-group">
-                    <input class="form-control rounded-0" type="text" name="user_query" placeholder="Search Users" aria-label="Search">
-                    <div class="input-group-append">
-                        <button class="btn rounded-0 search-btn" type="submit"><i class="fas fa-search search-icon"></i></button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div><br>
-    
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th class="small">Image</th>
-                    <th class="small">Username</th>
-                    <th class="small">Email</th>
-                    <th class="small">First Name</th>
-                    <th class="small">Last Name</th>
-                    <th class="small">Address</th>
-                    <th class="small">User Created Time</th>
-                    <th class="small">Is Ban</th>
-                    <th class="small">Ban Until</th>
-                    <th class="small text-center">User Role</th>
-                    <th class="small text-center">User Ban</th>
-                    {% if request.user.is_authenticated and request.user.user_role == 'admin' %}
-                    <th class="small">User Delete</th>
-                    {% endif %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                <tr>
-                    <td>
-                        <div class="d-flex align-items-center">
-                            <img src="{{ user.user_image.url }}" alt="{{ cart_item.product.product_name }}" class="img-thumbnail mr-2" style="max-height: 50px;">
-                        </div>
-                    </td>
-                    <td class="small">{{ user.username }}</td>
-                    <td class="small">{{ user.email }}</td>
-                    <td class="small">{{ user.first_name }}</td>
-                    <td class="small">{{ user.last_name }}</td>
-                    <td class="small">{{ user.address }}</td>
-                    <td class="small">{{ user.created_time }}</td>
-                    <td class="small">{{ user.is_banned }}</td>
-                    <td class="small">{{ user.ban_until }}</td>
-                    <td class="small" style="background-size: 500px;">
-                        {% if request.user.is_authenticated and request.user.user_role == 'admin' %}
-                        <form action="{% url 'edit_user_details' user_id=user.pk %}" method="POST">
-                            {% csrf_token %}
-                            <div style="display: flex; align-items: center;">
-                                <select name="user_role" class="form-control form-control-sm"  style="width: 70px;">
-                                    {% for role, role_display in user_role_choices %}
-                                        <option value="{{ role }}" {% if user.user_role == role %}selected{% endif %}>{{ role_display }}</option>
-                                    {% endfor %}
-                                </select>
-                                <button type="submit" class="btn btn-primary btn-sm mt-1"><i class="fas fa-edit">Update</i></button>
-                            </div>
-                        </form>
-                        {% else %}
-                            {{ user.user_role }}
-                        {% endif%}
-                    </td>
-                    <td class="small">
-                        {% if user.is_banned %}
-                            <form action="{% url 'unban_user' user_id=user.pk %}" method="POST">
-                                {% csrf_token %}
-                                <div style="display: flex; align-items: center;">
-                                    <span class="form-control form-control-plaintext" style="padding-left: 10px;">Already Banned</span>
-                                    <button type="submit" class="btn btn-success btn-sm mt-1">Unban</button>
-                                </div>
-                            </form>
-                        {% else %}
-                            <form  action="{% url 'ban_user' user_id=user.pk %}" method="POST">
-                                {% csrf_token %}
-                                <div style="display: flex; align-items: center;">
-                                    <input type="number" name="ban_duration_days" class="form-control form-control-sm" placeholder="Enter ban days" style="width: 120px;">
-                                    <button type="submit" class="btn btn-warning btn-sm mt-1">Ban</button>
-                                </div>
-                            </form>
-                        {% endif %}
-                    </td>
-                    {% if request.user.is_authenticated and request.user.user_role == 'admin' %}
-                    <td class="small">
-                        <a href="{% url 'delete_user' user_id=user.pk %}" class="btn btn-danger btn-sm mt-1"><i class="fas fa-trash-alt"></i></a>
-                    </td>
-                    {% endif %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<body>
+    <div class="header text-center">
+        <p class="mx-auto"> Manage Users</p>
     </div>
-</div>
+
+    <div class="container">
+        <div class="row mt-3">
+            <div class="col-md-6 mx-auto">
+                <form action="{% url 'user_search' %}" method="get" class="rounded p-2 search-bar">
+                    <div class="input-group">
+                        <input class="form-control rounded-0" type="text" name="user_query" placeholder="Search Users" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn rounded-0 search-btn" type="submit"><i class="fas fa-search search-icon"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div><br>
+        
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="small">Image</th>
+                        <th class="small">Username</th>
+                        <th class="small">Email</th>
+                        <th class="small">First Name</th>
+                        <th class="small">Last Name</th>
+                        <th class="small">Address</th>
+                        <th class="small">User Created Time</th>
+                        <th class="small">Is Ban</th>
+                        <th class="small">Ban Until</th>
+                        <th class="small text-center">User Role</th>
+                        <th class="small text-center">User Ban</th>
+                        {% if request.user.is_authenticated and request.user.user_role == 'admin' %}
+                        <th class="small">User Delete</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="{{ user.user_image.url }}" alt="{{ cart_item.product.product_name }}" class="img-thumbnail mr-2" style="max-height: 50px;">
+                            </div>
+                        </td>
+                        <td class="small">{{ user.username }}</td>
+                        <td class="small">{{ user.email }}</td>
+                        <td class="small">{{ user.first_name }}</td>
+                        <td class="small">{{ user.last_name }}</td>
+                        <td class="small">{{ user.address }}</td>
+                        <td class="small">{{ user.created_time }}</td>
+                        <td class="small">{{ user.is_banned }}</td>
+                        <td class="small">{{ user.ban_until }}</td>
+                        <td class="small" style="background-size: 500px;">
+                            {% if request.user.is_authenticated and request.user.user_role == 'admin' %}
+                            <form action="{% url 'edit_user_details' user_id=user.pk %}" method="POST">
+                                {% csrf_token %}
+                                <div style="display: flex; align-items: center;">
+                                    <select name="user_role" class="form-control form-control-sm"  style="width: 70px;">
+                                        {% for role, role_display in user_role_choices %}
+                                            <option value="{{ role }}" {% if user.user_role == role %}selected{% endif %}>{{ role_display }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn btn-primary btn-sm mt-1"><i class="fas fa-edit">Update</i></button>
+                                </div>
+                            </form>
+                            {% else %}
+                                {{ user.user_role }}
+                            {% endif%}
+                        </td>
+                        <td class="small">
+                            {% if user.is_banned %}
+                                <form action="{% url 'unban_user' user_id=user.pk %}" method="POST">
+                                    {% csrf_token %}
+                                    <div style="display: flex; align-items: center;">
+                                        <span class="form-control form-control-plaintext" style="padding-left: 10px;">Already Banned</span>
+                                        <button type="submit" class="btn btn-success btn-sm mt-1">Unban</button>
+                                    </div>
+                                </form>
+                            {% else %}
+                                <form  action="{% url 'ban_user' user_id=user.pk %}" method="POST">
+                                    {% csrf_token %}
+                                    <div style="display: flex; align-items: center;">
+                                        <input type="number" name="ban_duration_days" class="form-control form-control-sm" placeholder="Enter ban days" style="width: 120px;">
+                                        <button type="submit" class="btn btn-warning btn-sm mt-1">Ban</button>
+                                    </div>
+                                </form>
+                            {% endif %}
+                        </td>
+                        {% if request.user.is_authenticated and request.user.user_role == 'admin' %}
+                        <td class="small">
+                            <a href="{% url 'delete_user' user_id=user.pk %}" class="btn btn-danger btn-sm mt-1"><i class="fas fa-trash-alt"></i></a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
 
 
 {% endblock %}

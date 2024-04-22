@@ -1,0 +1,44 @@
+img {
+    width: 256px; 
+    height: 256px; 
+    object-fit: cover; 
+}
+.flex-container {
+    display: flex;
+}
+
+.form-container,
+.result-container {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+}
+
+.result-container {
+    margin-right: 0;
+}
+
+.image-containers {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px; 
+}
+
+.submit-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.name-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-container img {
+    max-width: 100%;
+    max-height: 100%;
+}

@@ -2,72 +2,85 @@
 
 {% block content %}
 
-<style>
-    .custom-card {
-        border: none;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
+{% load static %}
 
-    .custom-card .card-body {
-        background-color: #f8f9fa;
-    }
+  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <style>
+        .custom-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    
+        .custom-card .card-body {
+            background-color: #f8f9fa;
+        }
+    
+        .edit-profile-container {
+            width: 350px; 
+            margin: 0 auto; 
+            margin-top: 50px;
+        }
+        .btn {
+            background-color: #32cd32; 
+            border-color: #32cd32; 
+            color: #fff; 
+        }
+    </style> 
+</head>
 
-    .edit-profile-container {
-        width: 350px; 
-        margin: 0 auto; 
-        margin-top: 50px;
-    }
-    .btn {
-        background-color: #32cd32; 
-        border-color: #32cd32; 
-        color: #fff; 
-    }
-</style>
+<body>
+    <div class="container edit-profile-container">
+        <h2 class="text-center mb-4">Edit Your Profile</h2>
 
-<div class="container edit-profile-container">
-    <h2 class="text-center mb-4">Edit Your Profile</h2>
+        <form action="{% url 'edit_profile' %}" method="post" enctype="multipart/form-data" class="custom-card">
+            {% csrf_token %}
+            
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" name="email" class="form-control" value="{{ user.email }}" readonly>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username:</label>
+                    <input type="text" name="username" class="form-control" value="{{ user.username }}">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">First Name:</label>
+                    {{ form.first_name }}
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Last Name:</label>
+                    {{ form.last_name }}
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Address:</label>
+                    {{ form.address }}
+                </div>
 
-    <form action="{% url 'edit_profile' %}" method="post" enctype="multipart/form-data" class="card custom-card">
-        {% csrf_token %}
-        
-        <div class="card-body">
-            <div class="mb-3">
-                <label for="email" class="form-label">Email:</label>
-                <input type="email" name="email" class="form-control" value="{{ user.email }}" readonly>
+                <div class="mb-3">
+                    <label for="user_image" class="form-label">User Image:</label>
+                    {{ form.user_image }}
+                </div>
+                
+                <div class="text-center">
+                <button type="submit" class="btn">Save Changes</button>
+                <a href="{% url 'change_password' %}" class="btn"> Changes Password</a>
+                </div>
             </div>
-            
-            <div class="mb-3">
-                <label for="username" class="form-label">Username:</label>
-                <input type="text" name="username" class="form-control" value="{{ user.username }}">
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">First Name:</label>
-                {{ form.first_name }}
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Last Name:</label>
-                {{ form.last_name }}
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Address:</label>
-                {{ form.address }}
-            </div>
-
-            <div class="mb-3">
-                <label for="user_image" class="form-label">User Image:</label>
-                {{ form.user_image }}
-            </div>
-            
-            <div class="text-center">
-            <button type="submit" class="btn">Save Changes</button>
-            <a href="{% url 'change_password' %}" class="btn"> Changes Password</a>
-            </div>
-        </div>
-    </form><br>
-</div>
+        </form><br>
+    </div>
+</body>
+</html>
 
 {% endblock %}

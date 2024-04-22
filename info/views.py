@@ -49,7 +49,7 @@ def add_plant(request):
         form = Plant_Form(request.POST, request.FILES)
         if form.is_valid():
             plant = form.save(commit=False)
-            plant.plant_image.name = 'plants_images/' + plant.plant_image.name
+            plant.plant_image.name = 'images/plants_images/' + plant.plant_image.name
             plant.save()
             return redirect('display_plant_info')
     else:
@@ -68,7 +68,7 @@ def update_plant(request, pk):
         if form.is_valid():
             plant = form.save(commit=False)
             if 'plant_image' in request.FILES:
-                plant.plant_image.name = 'plants_images/' + plant.plant_image.name
+                plant.plant_image.name = 'images/plants_images/' + plant.plant_image.name
             plant.save()
             return redirect('display_plant_info')
     else:  

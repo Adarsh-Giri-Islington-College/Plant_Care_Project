@@ -1,67 +1,78 @@
 {% extends 'include/admin_navbar.html' %}
 
 {% block content %}
-  
-<style>
-    .header {
-        background-color: #0f3d0f;
-        color: #fff;
-        width: 100%;
-        height: 60px;
-        font-size: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .header p {
-        padding-top: 15px;
-    }
-</style>
 
+{% load static %}
 
-<div class="header text-center">
-    <p class="mx-auto"> Add New Product</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Products</title>
+    <style>
+        .header {
+            background-color: #0f3d0f;
+            color: #fff;
+            width: 100%;
+            height: 60px;
+            font-size: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header p {
+            padding-top: 15px;
+        }
+    </style>
+</head>
 
-<div class="container m-3">
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="{{ form.product_image.id_for_label }}">Product Image</label>
-            {{ form.product_image }}
-        </div>
-        <div class="form-group">
-            <label for="{{ form.product_name.id_for_label }}">Product Name</label>
-            {{ form.product_name }}
-        </div>
-        <div class="form-group">
-            <label for="{{ form.product_price.id_for_label }}">Product Price</label>
-            {{ form.product_price }}
-        </div>
-        <div class="form-group">
-            <label for="{{ form.product_quantity.id_for_label }}">Product Quantity</label>
-            {{ form.product_quantity }}
-        </div>
-        <div class="form-group">
-            <label for="{{ form.product_description.id_for_label }}">Product Description</label>
-            {{ form.product_description }}
-        </div>
-        <div class="form-group">
-            <label>Product For</label><br>
-            {% for checkbox in form.product_for %}
-                <div class="form-check form-check-inline">
-                    {{ checkbox }}
-                </div>
-            {% endfor %}
-        </div>
-        <div class="form-group">
-            <label for="{{ form.product_category.id_for_label }}">Product Category</label>
-            {{ form.product_category }}
-        </div><br>
-        <button type="submit" class="btn" style="background-color: #009933; color: white;">Add Product</button>
-    </form>    
-        
+<body>
+    <div class="header text-center">
+        <p class="mx-auto"> Add New Product</p>
+    </div>
 
-</div>
+    <div class="container m-3">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.product_image.id_for_label }}">Product Image</label>
+                {{ form.product_image }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.product_name.id_for_label }}">Product Name</label>
+                {{ form.product_name }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.product_price.id_for_label }}">Product Price</label>
+                {{ form.product_price }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.product_quantity.id_for_label }}">Product Quantity</label>
+                {{ form.product_quantity }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.product_description.id_for_label }}">Product Description</label>
+                {{ form.product_description }}
+            </div>
+            <div class="form-group">
+                <label>Product For</label><br>
+                {% for checkbox in form.product_for %}
+                    <div class="form-check form-check-inline">
+                        {{ checkbox }}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.product_category.id_for_label }}">Product Category</label>
+                {{ form.product_category }}
+            </div><br>
+            <button type="submit" class="btn" style="background-color: #009933; color: white;">Add Product</button>
+        </form>    
+            
+
+    </div>
+</body>
+</html>
 
 {% endblock %}

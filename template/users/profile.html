@@ -2,43 +2,56 @@
 
 {% block content %}
 
-<style>
-    .custom-card {
-        border: none;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
+{% load static %}
 
-    .profile-container {
-        width: 40%;
-        margin: 0 auto; 
-        margin-top: 50px; 
-    }
-    .btn {
-        background-color: #32cd32; 
-        border-color: #32cd32; 
-        color: #fff; 
-    }
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        .custom-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+    
+        .profile-container {
+            width: 40%;
+            margin: 0 auto; 
+            margin-top: 50px; 
+        }
+        .btn {
+            background-color: #32cd32; 
+            border-color: #32cd32; 
+            color: #fff; 
+        }
+    </style>
+</head>
 
-<div class="container profile-container">
-    <h2 class="text-center">Profile</h2><hr>
+<body>
+    <div class="container profile-container">
+        <h2 class="text-center">Profile</h2><hr>
 
-    <div class="row justify-content-center">    
-        <div class="col-md-6 text-center">
-            <div class="card custom-card">
-                <div class="card-body">
-                    <img src="{{ user.user_image.url }}" alt="User Image" class="img-thumbnail rounded-circle mb-4" style="width: 150px; height: 150px;"><br>
-                    <p><strong>Email:</strong> {{ user.email }}</p>
-                    <p><strong>Username:</strong> {{ user.username|capfirst }}</p>
-                    <p><strong>Full Name:</strong> {{ user.first_name|capfirst }} {{ user.last_name|capfirst }}</p>
-                    <p><strong>Address:</strong> {{ user.address|capfirst }}</p><br>
-                    <a href="{% url 'edit_profile' %}" class="btn">Edit Profile</a>
+        <div class="row justify-content-center">    
+            <div class="col-md-6 text-center">
+                <div class="custom-card">
+                    <div class="card-body">
+                        <img src="{{ user.user_image.url }}" alt="User Image" class="img-thumbnail rounded-circle mb-4" style="width: 150px; height: 150px;"><br>
+                        <p><strong>Email:</strong> {{ user.email }}</p>
+                        <p><strong>Username:</strong> {{ user.username|capfirst }}</p>
+                        <p><strong>Full Name:</strong> {{ user.first_name|capfirst }} {{ user.last_name|capfirst }}</p>
+                        <p><strong>Address:</strong> {{ user.address|capfirst }}</p><br>
+                        <a href="{% url 'edit_profile' %}" class="btn">Edit Profile</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-</div>
+    </div>
+</body>
+</html>
 
 {% endblock %}

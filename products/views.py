@@ -124,7 +124,7 @@ def add_product(request):
         if form.is_valid():
             product = form.save(commit=False)
             product.product_for = ','.join(form.cleaned_data.get('product_for', []))
-            product.product_image.name = 'products_images/' + product.product_image.name
+            product.product_image.name = 'images/products_images/' + product.product_image.name
             product.save()
             return redirect('display_products')
     else:
@@ -143,7 +143,7 @@ def update_product(request, pk):
         if form.is_valid():
             product = form.save(commit=False)
             if 'product_image' in request.FILES:
-                product.product_image.name = 'products_images/' + product.product_image.name
+                product.product_image.name = 'images/products_images/' + product.product_image.name
             product.product_for = ','.join(form.cleaned_data.get('product_for', []))
             product.save()
             return redirect('display_products')
