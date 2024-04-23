@@ -29,8 +29,8 @@
                                     </div>
                                 
                                     <div class="card-body">
-                                        <p class="card-title"><strong>{{ plant.plant_name }} </strong></p>
-                                        <p class="card-text">{{ plant.plant_description|slice:":40" }}{% if plant.plant_description|length > 40 %}...{% endif %}</p>
+                                        <p class="card-title"><strong style="font-size: 15px;">{{ plant.plant_name }}</strong></p>
+                                        <p class="card-text" style="font-size: 15px;">{{ plant.plant_description|slice:":40" }}{% if plant.plant_description|length > 40 %}...{% endif %}</p>
                                     </div>
                                     <hr>
 

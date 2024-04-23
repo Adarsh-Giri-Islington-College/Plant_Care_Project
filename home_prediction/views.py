@@ -23,6 +23,9 @@ labelInfo = json.loads(labelInfo)
 
 model = tf.keras.models.load_model('./models/final_plant_care_model.h5')
 
+if model:
+    print("model is loades")
+
 
 def index(request):
     if is_admin(request.user):

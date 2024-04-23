@@ -13,6 +13,18 @@
     <title>Homepage</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/display_product.css' %}">
+    <style>
+        @keyframes typing {
+          from { width: 0; }
+          to { width: 100%; }
+        }
+        .text-center {
+          text-align: center;
+          overflow: hidden;
+          white-space: nowrap;
+          animation: typing 4s steps(40, end) infinite alternate;
+        }
+      </style>
 </head>
 
 <body>
@@ -26,7 +38,7 @@
                 <form method="post" enctype="multipart/form-data" action="predictImage">
                     {% csrf_token %}
                     <div class="image-containers">
-                        <img id="uploadedImage" src="{% if filePathName %}{{ filePathName }}{% else %} ./static\images\placeholder\placeholder_img.png {% endif %}" alt="image">
+                        <img id="uploadedImage" src="{% if filePathName %}{{ filePathName }}{% else %} .\static\images\placeholder\placeholder_img.png {% endif %}" alt="image">
                     </div><br>
                     <div class="name-container">
                         <input name="filePath" type="file" onchange="previewImage(event)" style="background-color: #03ff03;"><br><br>

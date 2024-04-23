@@ -9,8 +9,8 @@ class Plant_Info(models.Model):
     plant_name = models.CharField(max_length=50)
     is_affected = models.BooleanField(default=False)
     plant_description = models.TextField()  
-    cause = models.TextField(max_length=50)
-    solution = models.TextField(max_length=50)
+    cause = models.TextField()
+    solution = models.TextField()
 
     def __str__(self):
         return self.plant_name

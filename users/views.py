@@ -110,7 +110,7 @@ def login(request):
             if user.user_role == 'user':
                 auth.login(request, user)
                 print('Login Successful!')
-                return redirect('display_products')
+                return redirect('homepage')
             else:
                 auth.login(request, user)
                 request.session.set_expiry(0)  

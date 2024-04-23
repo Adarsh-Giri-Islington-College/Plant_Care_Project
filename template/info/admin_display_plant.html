@@ -95,7 +95,7 @@
                                     <img src="{{ plant.plant_image.url }}" class="img-thumbnail" alt="Plant Image" style="max-width: 70px;">
                                 </td>
                                 <td class="small">{{ plant.plant_name }}</td>
-                                <td class="small">{{ plant.plant_description|slice:":25" }}{% if plant.plant_description|length > 25 %}...{% endif %}</td>
+                                <td class="small">{{ plant.plant_description}}</td>
                                 <td class="small">{{ plant.cause }}</td>
                                 <td class="small">{{ plant.solution }}</td>
                                 <td class="small">
