@@ -17,6 +17,7 @@ from django.db.models import Sum
 from datetime import datetime
 from django.db.models import Count
 import json
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 def is_admin(user):
@@ -193,6 +194,17 @@ def edit_profile(request):
 def view_users(request):
     users = User.objects.all()
     user_role_choices = User.ROLE_CHOICES 
+    
+    page_num = request.GET.get("page")
+    paginator = Paginator(users, 20)
+
+    try:
+        users = paginator.page(page_num)
+    except PageNotAnInteger:
+        users = paginator.page(1)
+    except EmptyPage:
+        users = paginator.page(paginator.num_pages)
+        
     context = {'users': users, 'user_role_choices': user_role_choices}
     return render(request, 'users/view_users.html', context)
 

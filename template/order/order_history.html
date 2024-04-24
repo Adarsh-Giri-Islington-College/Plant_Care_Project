@@ -10,6 +10,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order History</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/pagination.css' %}">
     <style>
         table thead {
             background-color: #4CAF50; 
@@ -71,6 +72,46 @@
         {% else %}
             <p class="mt-5">No orders found.</p>
         {% endif %}
+    </div>
+
+    <div class="d-flex justify-content-center">
+        <div class="row m-5">
+            <div class="col-md-12 m-2">
+                {% if user_orders.has_other_pages %}
+                    <ul class="pagination">
+                        {% if user_orders.has_previous %}
+                            <li class="page-item">
+                                <a href="?page={{ user_orders.previous_page_number }}" class="page-link">&laquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="?page=1">&laquo;</a>
+                            </li>
+                        {% endif %}
+                        {% for i in user_orders.paginator.page_range %}
+                            {% if user_orders.number == i %}
+                                <li class="page-item active">
+                                    <a class="page-link">{{ i }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if user_orders.has_next %}
+                            <li class="page-item">
+                                <a href="?page={{ user_orders.next_page_number }}" class="page-link">&raquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="?page={{ user_orders.paginator.num_pages }}">&raquo;</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </body>
 </html>

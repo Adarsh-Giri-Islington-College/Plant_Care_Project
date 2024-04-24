@@ -11,6 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Users</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/view_user.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/pagination.css' %}">
 </head>
 
 <body>
@@ -81,6 +82,7 @@
                                     <button type="submit" class="btn btn-primary btn-sm mt-1"><i class="fas fa-edit">Update</i></button>
                                 </div>
                             </form>
+                            
                             {% else %}
                                 {{ user.user_role }}
                             {% endif%}
@@ -113,6 +115,46 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center">
+        <div class="row m-5">
+            <div class="col-md-12 m-2">
+                {% if users.has_other_pages %}
+                    <ul class="pagination">
+                        {% if users.has_previous %}
+                            <li class="page-item">
+                                <a href="?page={{ users.previous_page_number }}" class="page-link">&laquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="?page=1">&laquo;</a>
+                            </li>
+                        {% endif %}
+                        {% for i in users.paginator.page_range %}
+                            {% if users.number == i %}
+                                <li class="page-item active">
+                                    <a class="page-link">{{ i }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if users.has_next %}
+                            <li class="page-item">
+                                <a href="?page={{ users.next_page_number }}" class="page-link">&raquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="?page={{ users.paginator.num_pages }}">&raquo;</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+            </div>
         </div>
     </div>
 </body>

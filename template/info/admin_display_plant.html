@@ -10,6 +10,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plants</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/pagination.css' %}">
     <style>
         .header {
             background-color: #0f3d0f;
@@ -87,6 +88,7 @@
                         <th class="small">Actions</th>
                     </tr>
                 </thead>
+                
                 <tbody>
                     {% if plant_info %}
                         {% for plant in plant_info %}

@@ -123,6 +123,16 @@ def COD(request):
 
 def order_history(request):
     user_orders = Order.objects.filter(user=request.user).order_by('-order_date')
+    
+    paginator = Paginator(user_orders, 20)
+    
+    page_num = request.GET.get("page")
+    try:
+        user_orders = paginator.page(page_num)
+    except PageNotAnInteger:
+        user_orders = paginator.page(1)
+    except EmptyPage:
+        user_orders = paginator.page(paginator.num_pages)
     context = {
         'user_orders': user_orders
     }

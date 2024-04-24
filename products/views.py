@@ -12,7 +12,7 @@ def display_products(request):
     products = Product.objects.all()
 
     page_num = request.GET.get("page")
-    paginator = Paginator(products, 60)
+    paginator = Paginator(products, 20)
 
     try:
         products = paginator.page(page_num)
@@ -85,6 +85,17 @@ def product_detail(request, pk):
 
 def display_categories(request):
     categories = ProductCategory.objects.all()
+    
+    page_num = request.GET.get("page")
+    paginator = Paginator(categories, 20)
+
+    try:
+        categories = paginator.page(page_num)
+    except PageNotAnInteger:
+        categories = paginator.page(1)
+    except EmptyPage:
+        categories = paginator.page(paginator.num_pages)
+
     return render(request, 'products/admin_display_category.html', {'categories': categories})
 
 

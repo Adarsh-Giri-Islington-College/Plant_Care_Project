@@ -10,7 +10,7 @@ def display_plant_info(request):
     plant_info = Plant_Info.objects.all()
 
     page_num = request.GET.get("page")
-    paginator = Paginator(plant_info, 60)
+    paginator = Paginator(plant_info, 20)
 
     try:
         plant_info = paginator.page(page_num)

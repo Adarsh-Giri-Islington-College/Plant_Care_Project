@@ -36,9 +36,9 @@ def add_favorite(request, pk):
     existing_favorite = Favorite.objects.filter(user=request.user, plant=plant).exists()
     if not existing_favorite:
         Favorite.objects.create(user=request.user, plant=plant)
-        return redirect('display_plant_info')
+        return redirect('display_favorite')
 
-    return redirect('display_plant_info')
+    return redirect('display_favorite')
     
 
 def delete_favorite(request, pk):

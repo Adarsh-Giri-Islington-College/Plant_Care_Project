@@ -10,6 +10,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Orders</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/pagination.css' %}">
     <style>
       .header {
           background-color: #0f3d0f;
@@ -90,6 +91,7 @@
                         <div class="d-flex align-items-center">
                           <img src="{{ order_item.product.product_image.url }}" alt="{{ cart_item.product.product_name }}" class="img-thumbnail mr-2" style="max-height: 50px;">
                       </div>
+                      
                       </td>
                       <td class="small">{{ order_item.product.product_name }}</td>
                       <td class="small">{{ order_item.quantity }}</td>

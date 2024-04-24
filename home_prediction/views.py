@@ -73,7 +73,7 @@ def predictImage(request):
 
                 Prediction.objects.create(user=request.user, image_path=filePathNames, predicted_label=label, confidence=confidence, recommended_products=recommended_product_names)        
 
-                if confidence < 70:
+                if confidence < 80:
                     label = "Unknown Image"
                     context = {
                         'filePathName': filePathName, 
